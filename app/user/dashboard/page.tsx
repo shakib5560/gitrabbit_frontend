@@ -12,6 +12,16 @@ import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Sparkles, GitBranch, Check } from "lucide-react";
 
+// Tab imports
+import { RepositoriesTab } from "@/components/dashboard/tabs/RepositoriesTab";
+import { PullRequestsTab } from "@/components/dashboard/tabs/PullRequestsTab";
+import { ReviewsTab } from "@/components/dashboard/tabs/ReviewsTab";
+import { SuggestionsTab } from "@/components/dashboard/tabs/SuggestionsTab";
+import { AnalyticsTab } from "@/components/dashboard/tabs/AnalyticsTab";
+import { ReportsTab } from "@/components/dashboard/tabs/ReportsTab";
+import { IntegrationsTab } from "@/components/dashboard/tabs/IntegrationsTab";
+import { SettingsTab } from "@/components/dashboard/tabs/SettingsTab";
+
 const Github = ({ size = 16, ...props }: React.SVGProps<SVGSVGElement> & { size?: number }) => (
   <svg
     viewBox="0 0 24 24"
@@ -245,26 +255,44 @@ export default function UserDashboard() {
             </div>
           ) : (
             /* Dashboard Loaded Content */
-            <div className="space-y-6">
-              {/* Row 1: Key Metrics Stats Section */}
-              <StatsSection />
+            activeTab === "overview" ? (
+              <div className="space-y-6">
+                {/* Row 1: Key Metrics Stats Section */}
+                <StatsSection />
 
-              {/* Row 2: Analytics Charts Section */}
-              <AnalyticsSection />
+                {/* Row 2: Analytics Charts Section */}
+                <AnalyticsSection />
 
-              {/* Row 3: Pull Requests & Sidebar Extras Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  <RecentPRs />
+                {/* Row 3: Pull Requests & Sidebar Extras Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2">
+                    <RecentPRs />
+                  </div>
+                  <div>
+                    <SidebarExtras coins={coins} transactions={transactions} />
+                  </div>
                 </div>
-                <div>
-                  <SidebarExtras coins={coins} transactions={transactions} />
-                </div>
+
+                {/* Row 4: Code Health & AI Insights Section */}
+                <InsightsHealth />
               </div>
-
-              {/* Row 4: Code Health & AI Insights Section */}
-              <InsightsHealth />
-            </div>
+            ) : activeTab === "repositories" ? (
+              <RepositoriesTab onAddRepo={() => setIsAddRepoOpen(true)} />
+            ) : activeTab === "prs" ? (
+              <PullRequestsTab />
+            ) : activeTab === "reviews" ? (
+              <ReviewsTab />
+            ) : activeTab === "suggestions" ? (
+              <SuggestionsTab coins={coins} setCoins={setCoins} />
+            ) : activeTab === "analytics" ? (
+              <AnalyticsTab />
+            ) : activeTab === "reports" ? (
+              <ReportsTab />
+            ) : activeTab === "integrations" ? (
+              <IntegrationsTab />
+            ) : activeTab === "settings" ? (
+              <SettingsTab />
+            ) : null
           )}
         </main>
       </div>
