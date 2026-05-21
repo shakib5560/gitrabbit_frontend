@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #F8FAFC;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F1F5F9;
+  --border-primary: #E2E8F0;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --accent-gold: #F5C518;
+  --accent-glow: rgba(245, 197, 24, 0.15);
+}
+
+.dark {
+  --bg-primary: #0A0B10; /* Deep midnight obsidian */
+  --bg-secondary: #121420; /* High-fidelity slate navy card bg */
+  --bg-tertiary: #1A1D2E; /* Slightly lighter accent bg */
+  --border-primary: rgba(255, 255, 255, 0.06); /* Ultra thin transparent borders */
+  --text-primary: #F3F4F6;
+  --text-secondary: #9CA3AF;
+  --text-muted: #4B5563;
+  --accent-glow: rgba(245, 197, 24, 0.12);
+}
+
+
+@theme {
+  --color-brand-yellow: #F5C518;
+  --color-brand-black: #0A0A0A;
+  --color-brand-dark: #111111;
+  --color-brand-gray: #1A1A1A;
+  --color-brand-muted: #6B6B6B;
+  --color-brand-white: #FFFFFF;
+
+  /* Premium Dynamic Theme Mapping */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-border-primary: var(--border-primary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent-glow: var(--accent-glow);
+
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+  --font-pixelify: var(--font-pixelify-sans), system-ui;
+  --font-press-start: var(--font-press-start), cursive;
+}
+
+h1, h2 {
+  font-family: var(--font-press-start);
+}
+
+@layer utilities {
+  .bg-pixel-grid {
+    background-image: linear-gradient(to right, var(--border-primary) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--border-primary) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .animate-scroll-x {
+    animation: scroll-x 20s linear infinite;
+  }
+}
+
+@keyframes scroll-x {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+:root {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Premium Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-gold);
+}
+
+/* 3D Elevated Cards & Elements */
+.card-3d {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+  border: 1px solid var(--border-primary);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.05),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-3d-active {
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.25), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.2),
+    0 0 20px var(--accent-glow),
+    inset 1px 1px 0px rgba(255, 255, 255, 0.1),
+    inset -1px -1px 0px rgba(0, 0, 0, 0.1);
+  border-color: rgba(245, 197, 24, 0.3);
+}
+
+/* Tactile 3D Buttons */
+.btn-flat-3d {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 0px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.1s ease;
+}
+
+.btn-flat-3d:active {
+  transform: translateY(2px);
+  box-shadow: 0 0px 0px rgba(0, 0, 0, 0.2);
+}
+
+.btn-flat-3d-gold {
+  background: var(--accent-gold);
+  color: #000000;
+  border-color: #C69E10;
+  box-shadow: 0 4px 0px #9E7D0C;
+}
+
+.btn-flat-3d-gold:hover {
+  filter: brightness(1.05);
+}
+
+.btn-flat-3d-gold:active {
+  transform: translateY(2px);
+  box-shadow: 0 0px 0px #9E7D0C;
+}
+
+/* Micro Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(0.5deg); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes coin-spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+.animate-coin-spin {
+  animation: coin-spin 8s linear infinite;
+}
+
+/* ===== Dashboard Container: Force Clean Smart Typography ===== */
+.dashboard-container,
+.dashboard-container h1,
+.dashboard-container h2,
+.dashboard-container h3,
+.dashboard-container h4,
+.dashboard-container h5,
+.dashboard-container h6,
+.dashboard-container p,
+.dashboard-container span,
+.dashboard-container label,
+.dashboard-container button,
+.dashboard-container select,
+.dashboard-container input,
+.dashboard-container textarea,
+.dashboard-container a {
+  font-family: var(--font-sans) !important;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.dashboard-container .font-mono,
+.dashboard-container code,
+.dashboard-container pre {
+  font-family: var(--font-mono) !important;
+}
+
+/* Dashboard coin glow animation */
+@keyframes coin-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0); }
+  50% { box-shadow: 0 0 10px 3px rgba(245, 197, 24, 0.25); }
+}
+
+.coin-glow {
+  animation: coin-pulse 2.5s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────
+   Theme-toggle button micro-interactions
+───────────────────────────────────────────── */
+.theme-toggle-btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.18), 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.93);
+}
+
+/* Click-ripple pseudo-element */
+.theme-toggle-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(245, 197, 24, 0.25) 0%, transparent 70%);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+
+.theme-toggle-btn:active::after {
+  opacity: 1;
+  transform: scale(1.6);
+  transition: none;
+}
+
+/* ─────────────────────────────────────────────
+   View Transition overrides (when supported)
+   These disable the browser's default crossfade
+   so our JS clip-path ripple is the sole effect
+───────────────────────────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ─────────────────────────────────────────────
+   Reduced-motion: strip all decorative motion
+───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .theme-toggle-btn:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .theme-toggle-btn:active {
+    transform: none;
+  }
+}
+
