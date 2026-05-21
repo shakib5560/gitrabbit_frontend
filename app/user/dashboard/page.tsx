@@ -21,6 +21,8 @@ import { AnalyticsTab } from "@/components/dashboard/tabs/AnalyticsTab";
 import { ReportsTab } from "@/components/dashboard/tabs/ReportsTab";
 import { IntegrationsTab } from "@/components/dashboard/tabs/IntegrationsTab";
 import { SettingsTab } from "@/components/dashboard/tabs/SettingsTab";
+import { TeamTab } from "@/components/dashboard/tabs/TeamTab";
+import { ChatTab } from "@/components/dashboard/tabs/ChatTab";
 
 const Github = ({ size = 16, ...props }: React.SVGProps<SVGSVGElement> & { size?: number }) => (
   <svg
@@ -290,6 +292,10 @@ export default function UserDashboard() {
               <ReportsTab />
             ) : activeTab === "integrations" ? (
               <IntegrationsTab />
+            ) : activeTab === "team" ? (
+              <TeamTab />
+            ) : activeTab === "chat" ? (
+              <ChatTab />
             ) : activeTab === "settings" ? (
               <SettingsTab />
             ) : null

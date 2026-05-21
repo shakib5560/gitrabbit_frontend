@@ -15,6 +15,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FolderDot,
+  Users,
+  MessageSquare,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -35,6 +37,8 @@ export function Sidebar({ activeTab, setActiveTab, coins }: SidebarProps) {
     { id: "analytics", label: "Analytics", icon: BarChart3 },
     { id: "reports", label: "Reports", icon: FileText },
     { id: "integrations", label: "Integrations", icon: Blocks },
+    { id: "team", label: "Team Collaboration", icon: Users },
+    { id: "chat", label: "Real-time Messaging", icon: MessageSquare },
     { id: "settings", label: "Settings", icon: Settings },
   ];
 
