@@ -8,6 +8,7 @@ import { Check, Sparkles, CreditCard, Lock, Mail, User, Building } from "lucide-
 import Image from "next/image";
 import Link from "next/link";
 import { Modal } from "@/components/ui/Modal";
+import { useBackendRequired } from "@/hooks/useBackendRequired";
 
 const pricingPlans = [
   {
@@ -73,6 +74,7 @@ const pricingPlans = [
 ];
 
 export default function PricingPage() {
+  const backend = useBackendRequired();
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<"form" | "loading" | "success">("form");
@@ -87,17 +89,8 @@ export default function PricingPage() {
   const [notes, setNotes] = useState("");
 
   const handlePlanClick = (plan: any) => {
-    setSelectedPlan(plan);
-    setCheckoutStep("form");
-    setIsCheckoutOpen(true);
-    // Reset inputs
-    setEmail("");
-    setName("");
-    setCardNumber("");
-    setCardExpiry("");
-    setCardCvc("");
-    setCompany("");
-    setNotes("");
+    backend.open();
+    return;
   };
 
   const handleCheckoutSubmit = (e: React.FormEvent) => {

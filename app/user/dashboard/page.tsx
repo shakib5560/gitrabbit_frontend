@@ -23,6 +23,7 @@ import { IntegrationsTab } from "@/components/dashboard/tabs/IntegrationsTab";
 import { SettingsTab } from "@/components/dashboard/tabs/SettingsTab";
 import { TeamTab } from "@/components/dashboard/tabs/TeamTab";
 import { ChatTab } from "@/components/dashboard/tabs/ChatTab";
+import { useBackendRequired } from "@/hooks/useBackendRequired";
 
 const Github = ({ size = 16, ...props }: React.SVGProps<SVGSVGElement> & { size?: number }) => (
   <svg
@@ -52,6 +53,12 @@ export interface CoinTransaction {
 }
 
 export default function UserDashboard() {
+  const backend = useBackendRequired();
+
+  useEffect(() => {
+    backend.open();
+  }, [backend]);
+
   const [activeTab, setActiveTab] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddRepoOpen, setIsAddRepoOpen] = useState(false);
@@ -197,7 +204,7 @@ export default function UserDashboard() {
         <Header
           title={activeTab === "overview" ? "Overview" : activeTab}
           onSearch={handleSearch}
-          onAddRepo={() => setIsAddRepoOpen(true)}
+          onAddRepo={() => backend.open()}
           coins={coins}
         />
 
@@ -279,7 +286,7 @@ export default function UserDashboard() {
                 <InsightsHealth />
               </div>
             ) : activeTab === "repositories" ? (
-              <RepositoriesTab onAddRepo={() => setIsAddRepoOpen(true)} />
+              <RepositoriesTab onAddRepo={() => backend.open()} />
             ) : activeTab === "prs" ? (
               <PullRequestsTab />
             ) : activeTab === "reviews" ? (

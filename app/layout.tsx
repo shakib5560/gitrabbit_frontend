@@ -3,7 +3,7 @@ import { Inter, Space_Mono, Pixelify_Sans, Press_Start_2P } from "next/font/goog
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { PageLoader } from "@/components/PageLoader";
-
+import { BackendRequiredProvider } from "@/context/BackendRequiredContext";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -65,8 +65,10 @@ export default function RootLayout({
         className={`${inter.variable} ${spaceMono.variable} ${pixelifySans.variable} ${pressStart2P.variable} antialiased bg-brand-black text-brand-white selection:bg-brand-yellow selection:text-black`}
       >
         <ThemeProvider>
-          <PageLoader />
-          {children}
+          <BackendRequiredProvider>
+            <PageLoader />
+            {children}
+          </BackendRequiredProvider>
         </ThemeProvider>
       </body>
     </html>

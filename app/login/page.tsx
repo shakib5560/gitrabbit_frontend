@@ -5,8 +5,17 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Mail, Lock, Terminal } from "lucide-react";
+import { useBackendRequired } from "@/hooks/useBackendRequired";
+
+import { useEffect } from "react";
 
 export default function LoginPage() {
+  const backend = useBackendRequired();
+  
+  useEffect(() => {
+    backend.open();
+  }, [backend]);
+
   return (
     <main className="min-h-screen bg-brand-black selection:bg-brand-yellow selection:text-brand-black">
       <Navbar />
@@ -78,7 +87,11 @@ export default function LoginPage() {
 
               {/* PRIORITY SOCIAL LOGINS */}
               <div className="space-y-3 mb-8">
-                <button className="w-full flex items-center justify-center gap-3 py-3.5 bg-brand-white text-black rounded-lg hover:bg-gray-200 transition-all text-xs font-bold font-press-start uppercase shadow-[3px_3px_0px_rgba(245,197,24,0.5)]">
+                <button
+                  type="button"
+                  onClick={() => backend.open()}
+                  className="w-full flex items-center justify-center gap-3 py-3.5 bg-brand-white text-black rounded-lg hover:bg-gray-200 transition-all text-xs font-bold font-press-start uppercase shadow-[3px_3px_0px_rgba(245,197,24,0.5)]"
+                >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 16.418 4.865 20.166 8.839 21.5C9.339 21.591 9.524 21.282 9.524 21.018C9.524 20.781 9.515 20.155 9.51 19.34C6.73 19.943 6.143 18.003 6.143 18.003C5.688 16.848 5.033 16.541 5.033 16.541C4.127 15.922 5.102 15.934 5.102 15.934C6.104 16.004 6.63 16.96 6.63 16.96C7.52 18.484 8.966 18.044 9.544 17.788C9.635 17.135 9.897 16.695 10.187 16.444C7.967 16.191 5.635 15.333 5.635 11.478C5.635 10.378 6.028 9.477 6.671 8.766C6.567 8.513 6.222 7.487 6.77 6.098C6.77 6.098 7.615 5.827 9.51 7.108C10.313 6.884 11.168 6.772 12.015 6.768C12.861 6.772 13.716 6.884 14.52 7.108C16.414 5.827 17.258 6.098 17.258 6.098C17.807 7.487 17.462 8.513 17.359 8.766C18.003 9.477 18.394 10.378 18.394 11.478C18.394 15.344 16.059 16.188 13.834 16.435C14.197 16.748 14.521 17.368 14.521 18.334C14.521 19.721 14.509 20.841 14.509 21.018C14.509 21.284 14.693 21.603 15.203 21.5C19.172 20.161 22.034 16.418 22.034 12C22.034 6.477 17.523 2 12 2Z" fill="currentColor" />
                   </svg>
@@ -112,7 +125,11 @@ export default function LoginPage() {
                 </div>
 
                 <div className="pt-4">
-                  <button type="button" className="w-full bg-brand-yellow text-brand-black font-press-start text-[10px] uppercase py-4 shadow-[4px_4px_0px_#FFFFFF] hover:brightness-110 active:shadow-none transition-all">
+                  <button
+                    type="button"
+                    onClick={() => backend.open()}
+                    className="w-full bg-brand-yellow text-brand-black font-press-start text-[10px] uppercase py-4 shadow-[4px_4px_0px_#FFFFFF] hover:brightness-110 active:shadow-none transition-all"
+                  >
                     Log in
                   </button>
                 </div>

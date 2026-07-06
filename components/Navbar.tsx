@@ -4,8 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { NAV_LINKS } from "@/lib/constants";
+import { useBackendRequired } from "@/hooks/useBackendRequired";
 
 export const Navbar = () => {
+  const backend = useBackendRequired();
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
       {/* Announcement Bar / Text Ads */}
@@ -56,18 +58,18 @@ export const Navbar = () => {
 
           {/* Right: Buttons */}
           <div className="flex items-center gap-4">
-            <Link
-              href="/login"
-              className="hidden sm:block text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-brand-white transition-colors"
+            <button
+              onClick={() => backend.open()}
+              className="hidden sm:block text-xs font-mono uppercase tracking-widest text-gray-400 hover:text-brand-white transition-colors cursor-pointer"
             >
               Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="bg-brand-yellow text-brand-black font-bold text-[10px] md:text-xs font-press-start uppercase px-4 py-2.5 hover:brightness-110 transition-all flex items-center gap-1.5 shadow-[2px_2px_0px_#FFFFFF]"
+            </button>
+            <button
+              onClick={() => backend.open()}
+              className="bg-brand-yellow text-brand-black font-bold text-[10px] md:text-xs font-press-start uppercase px-4 py-2.5 hover:brightness-110 transition-all flex items-center gap-1.5 shadow-[2px_2px_0px_#FFFFFF] cursor-pointer"
             >
               Start Free
-            </Link>
+            </button>
           </div>
         </div>
       </motion.nav>

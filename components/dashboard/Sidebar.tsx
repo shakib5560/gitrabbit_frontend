@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { useBackendRequired } from "@/hooks/useBackendRequired";
 import {
   LayoutDashboard,
   GitBranch,
@@ -26,6 +27,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeTab, setActiveTab, coins }: SidebarProps) {
+  const backend = useBackendRequired();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menuItems = [
@@ -99,7 +101,13 @@ export function Sidebar({ activeTab, setActiveTab, coins }: SidebarProps) {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  if (["suggestions", "team", "chat"].includes(item.id)) {
+                    backend.open();
+                  } else {
+                    setActiveTab(item.id);
+                  }
+                }}
                 className={`w-full flex items-center gap-3.5 px-3 py-2.5 rounded-xl text-sm font-bold transition-all relative overflow-hidden group cursor-pointer ${
                   isActive
                     ? "text-brand-yellow"
