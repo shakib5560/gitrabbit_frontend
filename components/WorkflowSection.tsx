@@ -124,11 +124,11 @@ export const WorkflowSection = () => {
                 </div>
                 <div className="flex group">
                   <span className="w-6 text-gray-600 text-right pr-2 select-none">11</span>
-                  <span className="text-gray-300 whitespace-pre">  if (!payment) {"{"}</span>
+                  <span className="text-gray-300 whitespace-pre">  {"if (!payment) {"}</span>
                 </div>
                 <div className="flex group">
                   <span className="w-6 text-gray-600 text-right pr-2 select-none">12</span>
-                  <span className="text-gray-300 whitespace-pre">    throw new Error(&apos;Invalid payment&apos;);</span>
+                  <span className="text-gray-300 whitespace-pre">{"    throw new Error('Invalid payment');"}</span>
                 </div>
                 <div className="flex group">
                   <span className="w-6 text-gray-600 text-right pr-2 select-none">13</span>
@@ -147,11 +147,11 @@ export const WorkflowSection = () => {
                 </div>
                 <div className="flex bg-green-950/40 w-full group">
                   <span className="w-6 text-green-500/50 text-right pr-2 select-none">+</span>
-                  <span className="text-green-400 whitespace-pre">  if (amount {"<"}= 0) {"{"}</span>
+                  <span className="text-green-400 whitespace-pre">  {"if (amount <= 0) {"}</span>
                 </div>
                 <div className="flex bg-green-950/40 w-full group">
                   <span className="w-6 text-green-500/50 text-right pr-2 select-none">+</span>
-                  <span className="text-green-400 whitespace-pre">    throw new Error(&apos;Amount must be greater than 0&apos;);</span>
+                  <span className="text-green-400 whitespace-pre">{"    throw new Error('Amount must be greater than 0');"}</span>
                 </div>
                 <div className="flex group">
                   <span className="w-6 text-gray-600 text-right pr-2 select-none">18</span>
