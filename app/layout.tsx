@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   title: "gitrabbit - AI Code Reviews",
   description: "AI-powered code review SaaS tool.",
   icons: {
-    icon: "/icon.png",
+    icon: "/favicon.ico",
   },
 };
 
