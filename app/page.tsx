@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
+import { ProjectIntroSection } from "@/components/ProjectIntroSection";
 import { FeaturesSection } from "@/components/FeaturesSection";
 import { WorkflowSection } from "@/components/WorkflowSection";
 import { StatsSection } from "@/components/StatsSection";
@@ -10,6 +11,7 @@ export default function Home() {
     <main className="min-h-screen bg-brand-black selection:bg-brand-yellow selection:text-brand-black">
       <Navbar />
       <HeroSection />
+      <ProjectIntroSection />
       <FeaturesSection />
       <WorkflowSection />
       <StatsSection />
