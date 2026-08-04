@@ -41,7 +41,7 @@ export const Footer = () => {
             <Link href="/" className="inline-block group">
               <div className="">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/logo.png" alt="gitrabbit" className="w-20 h-20" />
+                <img src="/footerlogo.png" alt="gitrabbit" className="h-24 w-auto object-contain" />
               </div>
             </Link>
           </div>

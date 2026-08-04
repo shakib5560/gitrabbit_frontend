@@ -35,12 +35,9 @@ export const Navbar = () => {
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <div className="w-12 h-12 relative shrink-0">
-              <Image src="/logonav.png" alt="gitrabbit logo" fill className="object-contain" />
+            <div className="w-56 h-14 relative shrink-0">
+              <Image src="/mainlogo.png" alt="gitrabbit logo" fill className="object-contain object-left" />
             </div>
-            <span className="font-press-start text-brand-white text-base md:text-lg tracking-tighter">
-              gitrabbit
-            </span>
           </Link>
 
           {/* Center: Nav links */}
