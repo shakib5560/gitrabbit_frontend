@@ -4,24 +4,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { NAV_LINKS } from "@/lib/constants";
+import { useState } from "react";
 import { useBackendRequired } from "@/hooks/useBackendRequired";
+import { V2AnnouncementModal } from "./v2-announcement-modal";
 
 export const Navbar = () => {
   const backend = useBackendRequired();
+  const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
-      {/* Announcement Bar / Text Ads */}
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50">
+        {/* Announcement Bar / Text Ads */}
       <div className="bg-brand-yellow text-brand-black py-2 px-4 border-b border-brand-black/10">
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-4">
           <span className="text-[9px] md:text-[10px] font-press-start tracking-tight uppercase">
-            🚀 AI Review Agent v2 is now live!
+            🐇 GitRabbit v2 is under construction
           </span>
-          <Link
-            href="/blog/agent-v2"
-            className="bg-brand-black text-brand-yellow px-3 py-1 text-[8px] md:text-[9px] font-press-start uppercase hover:brightness-125 transition-all shadow-[1px_1px_0px_#FFFFFF]"
+          <button
+            onClick={() => setIsV2ModalOpen(true)}
+            className="bg-brand-black text-brand-yellow px-3 py-1 text-[8px] md:text-[9px] font-press-start uppercase hover:brightness-125 transition-all shadow-[1px_1px_0px_#FFFFFF] cursor-pointer"
           >
             Learn More
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -71,5 +75,10 @@ export const Navbar = () => {
         </div>
       </motion.nav>
     </header>
+      <V2AnnouncementModal 
+        isOpen={isV2ModalOpen} 
+        onClose={() => setIsV2ModalOpen(false)} 
+      />
+    </>
   );
 };
