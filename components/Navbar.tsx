@@ -4,13 +4,29 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { NAV_LINKS } from "@/lib/constants";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useBackendRequired } from "@/hooks/useBackendRequired";
 import { V2AnnouncementModal } from "./v2-announcement-modal";
 
 export const Navbar = () => {
   const backend = useBackendRequired();
   const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (pathname === "/") {
+      const hasSeenModal = sessionStorage.getItem("hasSeenV2Modal");
+      if (!hasSeenModal) {
+        const timer = setTimeout(() => {
+          setIsV2ModalOpen(true);
+          sessionStorage.setItem("hasSeenV2Modal", "true");
+        }, 2000);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [pathname]);
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50">
