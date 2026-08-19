@@ -703,7 +703,7 @@ export default function PricingPage() {
               <button onClick={() => setIsCheckoutOpen(false)} className="px-4 py-2 text-xs font-semibold rounded-xl border border-border-primary text-text-secondary hover:text-text-primary hover:bg-bg-tertiary transition-colors cursor-pointer">
                 Close
               </button>
-              <Link href="/user/dashboard" className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-yellow text-brand-black hover:brightness-110 transition-colors shadow-[2px_2px_0px_#FFFFFF] cursor-pointer">
+              <Link href="/superadmin/dashboard" className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-yellow text-brand-black hover:brightness-110 transition-colors shadow-[2px_2px_0px_#FFFFFF] cursor-pointer">
                 Go to Dashboard
               </Link>
             </div>

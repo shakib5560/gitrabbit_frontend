@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 
 import { ArrowUpRight, Flame, GitMerge, Sparkles, PlusCircle } from "lucide-react";
-import { CoinTransaction } from "@/app/user/dashboard/page";
+import { CoinTransaction } from "@/app/superadmin/dashboard/page";
 
 interface TopRepo {
   name: string;

@@ -34,8 +34,8 @@ gitrabbit_frontend/
 │   ├── blog/                   # /blog & /blog/[id]
 │   ├── changelog/              # /changelog
 │   ├── docs/                   # /docs — 30+ documentation pages
-│   └── user/
-│       └── dashboard/          # /user/dashboard (token-protected)
+│   └── superadmin/
+│       └── dashboard/          # /superadmin/dashboard (token-protected)
 │
 ├── components/
 │   ├── HeroSection.tsx         # Landing hero
@@ -150,7 +150,7 @@ npm run start
 
 ## 🔐 Dashboard Access
 
-The dashboard at `/user/dashboard` is protected by an **access token**.
+The dashboard at `/superadmin/dashboard` is protected by an **access token**.
 
 Enter the token when prompted to unlock the full dashboard experience. Contact the developer to get the access token.
 
@@ -183,7 +183,7 @@ Enter the token when prompted to unlock the full dashboard experience. Contact t
 | `/docs/github` | GitHub integration |
 | `/docs/gitlab` | GitLab integration |
 | `/docs/bitbucket` | Bitbucket integration |
-| `/user/dashboard` | User dashboard (token-protected) |
+| `/superadmin/dashboard` | User dashboard (token-protected) |
 
 ---
 
