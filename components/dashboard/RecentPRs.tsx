@@ -2,81 +2,80 @@
 
 import React from "react";
 import { Card } from "@/components/ui/Card";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight, Sparkles, GitMerge, GitPullRequest } from "lucide-react";
 
 interface PRItem {
   repoName: string;
   prNumber: number;
   title: string;
-  status: "Merged" | "Open";
+  status: "Merged" | "Open" | "Review";
   reviewer: {
     name: string;
-    avatar: string;
+    username: string;
+    location: string;
+    initials: string;
+    color: string;
   };
   time: string;
+  branch: string;
   insights: {
     high: number;
     medium: number;
     low: number;
   };
+  additions: number;
+  deletions: number;
 }
 
-export function RecentPRs() {
+interface RecentPRsProps {
+  onViewAll?: () => void;
+}
+
+export function RecentPRs({ onViewAll }: RecentPRsProps) {
   const prs: PRItem[] = [
     {
-      repoName: "api-service",
-      prNumber: 233,
-      title: "Optimize database queries",
+      repoName: "gitrabbit-backend",
+      prNumber: 47,
+      title: "Implement JWT refresh token rotation & Redis session store",
       status: "Open",
       reviewer: {
-        name: "Michael Chen",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&q=80",
-      },
-      time: "4h ago",
-      insights: { high: 5, medium: 10, low: 8 },
-    },
-    {
-      repoName: "frontend-app",
-      prNumber: 134,
-      title: "Add dark mode support",
-      status: "Merged",
-      reviewer: {
-        name: "Sarah Johnson",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80",
+        name: "Rakibul Hasan",
+        username: "rakib-dev",
+        location: "Dhaka, BD 🇧🇩",
+        initials: "RH",
+        color: "#F5C518",
       },
       time: "2h ago",
-      insights: { high: 0, medium: 3, low: 14 },
+      branch: "feature/auth-refresh",
+      insights: { high: 2, medium: 4, low: 7 },
+      additions: 312,
+      deletions: 48,
     },
     {
-      repoName: "frontend-app",
-      prNumber: 89,
-      title: "Fix login session issue",
-      status: "Merged",
+      repoName: "gitrabbit-frontend",
+      prNumber: 83,
+      title: "Add AI-powered PR diff viewer with syntax highlighting",
+      status: "Review",
       reviewer: {
-        name: "Emily Davis",
-        avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=80&q=80",
+        name: "Tanvir Ahmed",
+        username: "tanvir-codes",
+        location: "Chittagong, BD 🇧🇩",
+        initials: "TA",
+        color: "#10B981",
       },
-      time: "6h ago",
-      insights: { high: 1, medium: 2, low: 5 },
-    },
-    {
-      repoName: "api-service",
-      prNumber: 132,
-      title: "Improve accessibility",
-      status: "Open",
-      reviewer: {
-        name: "David Wilson",
-        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&q=80",
-      },
-      time: "1d ago",
-      insights: { high: 3, medium: 6, low: 9 },
+      time: "5h ago",
+      branch: "feature/ai-diff-viewer",
+      insights: { high: 0, medium: 3, low: 11 },
+      additions: 528,
+      deletions: 92,
     },
   ];
 
   return (
     <Card hoverGlow={true} delay={0.3} className="flex flex-col h-full select-none justify-between">
       <div>
-        <div className="flex items-center justify-between border-b border-border-primary pb-4 mb-4">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-border-primary pb-4 mb-5">
           <div>
             <h3 className="text-sm font-bold text-text-primary tracking-wide font-sans">
               Recent Pull Requests
@@ -88,91 +87,112 @@ export function RecentPRs() {
           <Sparkles size={16} className="text-brand-yellow animate-pulse" />
         </div>
 
-        {/* PR List Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[650px] border-collapse text-left">
-            <thead>
-              <tr className="border-b border-border-primary text-text-muted text-[10px] font-bold uppercase tracking-wider">
-                <th className="py-3 font-sans">Repository</th>
-                <th className="py-3 font-sans">Title</th>
-                <th className="py-3 font-sans">Status</th>
-                <th className="py-3 font-sans">Reviewer</th>
-                <th className="py-3 font-sans text-right">Insights</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border-primary/50">
-              {prs.map((pr, idx) => (
-                <tr key={idx} className="group hover:bg-bg-tertiary/20 transition-all duration-200">
-                  {/* Repo */}
-                  <td className="py-4 pr-3">
+        {/* PR Cards */}
+        <div className="space-y-4">
+          {prs.map((pr, idx) => (
+            <div
+              key={idx}
+              className="group relative rounded-xl border border-border-primary bg-bg-secondary hover:border-brand-yellow/30 hover:bg-bg-tertiary/30 transition-all duration-300 p-4 overflow-hidden"
+            >
+              {/* Left accent bar */}
+              <div
+                className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl transition-all duration-300"
+                style={{ backgroundColor: pr.status === "Merged" ? "#38bdf8" : pr.status === "Review" ? pr.reviewer.color : "#F5C518" }}
+              />
+
+              <div className="flex flex-col gap-3 pl-2">
+                {/* Top row: repo + status + time */}
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-[10px] font-mono font-bold text-text-secondary bg-bg-tertiary px-2 py-0.5 rounded border border-border-primary/50">
                       {pr.repoName}
                     </span>
-                  </td>
-
-                  {/* Title */}
-                  <td className="py-4 pr-4">
-                    <span className="text-xs md:text-sm font-bold text-text-primary group-hover:text-brand-yellow transition-colors font-sans truncate max-w-[220px] block">
-                      #{pr.prNumber} {pr.title}
+                    <span className="text-[10px] font-mono text-text-muted">
+                      {pr.branch}
                     </span>
-                  </td>
-
-                  {/* Status Badge */}
-                  <td className="py-4 pr-4">
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-text-muted font-sans">{pr.time}</span>
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm ${
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide border ${
                         pr.status === "Merged"
                           ? "border-sky-500/25 bg-sky-500/5 text-sky-400"
+                          : pr.status === "Review"
+                          ? "border-emerald-500/25 bg-emerald-500/5 text-emerald-400"
                           : "border-amber-500/25 bg-amber-500/5 text-amber-400"
                       }`}
                     >
+                      {pr.status === "Merged" ? (
+                        <GitMerge size={9} />
+                      ) : (
+                        <GitPullRequest size={9} />
+                      )}
                       {pr.status}
                     </span>
-                  </td>
+                  </div>
+                </div>
 
-                  {/* Reviewer Profile */}
-                  <td className="py-4 pr-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full overflow-hidden border border-border-primary flex-shrink-0 bg-bg-tertiary shadow-sm">
-                        <img
-                          src={pr.reviewer.avatar}
-                          alt={pr.reviewer.name}
-                          width={24}
-                          height={24}
-                          className="object-cover w-6 h-6"
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-text-secondary font-sans truncate max-w-[100px]">
-                        {pr.reviewer.name}
-                      </span>
+                {/* PR title */}
+                <p className="text-sm font-bold text-text-primary group-hover:text-brand-yellow transition-colors font-sans leading-snug">
+                  <span className="text-text-muted font-mono text-xs mr-1">#{pr.prNumber}</span>
+                  {pr.title}
+                </p>
+
+                {/* Bottom row: reviewer + diff stats + insights */}
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  {/* Reviewer */}
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-black shrink-0 shadow-sm"
+                      style={{ backgroundColor: pr.reviewer.color }}
+                    >
+                      {pr.reviewer.initials}
                     </div>
-                  </td>
+                    <div>
+                      <p className="text-xs font-semibold text-text-primary font-sans leading-none">
+                        {pr.reviewer.name}
+                      </p>
+                      <p className="text-[10px] text-text-muted font-sans mt-0.5">
+                        {pr.reviewer.location}
+                      </p>
+                    </div>
+                  </div>
 
-                  {/* AI Insights Indicators */}
-                  <td className="py-4 text-right">
-                    <div className="inline-flex items-center gap-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Diff stats */}
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold">
+                      <span className="text-emerald-400">+{pr.additions}</span>
+                      <span className="text-text-muted">/</span>
+                      <span className="text-rose-400">-{pr.deletions}</span>
+                    </div>
+
+                    {/* AI Insight badges */}
+                    <div className="flex items-center gap-1">
                       {pr.insights.high > 0 && (
-                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-rose-400 bg-rose-500/10 border border-rose-500/20 shadow-[0_0_8px_rgba(244,63,94,0.15)]">
-                          High: {pr.insights.high}
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-rose-400 bg-rose-500/10 border border-rose-500/20">
+                          H:{pr.insights.high}
                         </span>
                       )}
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 shadow-[0_0_8px_rgba(245,158,11,0.1)]">
-                        Medium: {pr.insights.medium}
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20">
+                        M:{pr.insights.medium}
                       </span>
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_8px_rgba(16,185,129,0.1)]">
-                        Low: {pr.insights.low}
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                        L:{pr.insights.low}
                       </span>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Footer link */}
-      <button className="flex items-center gap-1.5 text-xs font-bold text-brand-yellow hover:text-[#e0b410] mt-4 group transition-all self-start cursor-pointer font-sans">
+      {/* Footer — View All */}
+      <button
+        onClick={onViewAll}
+        className="flex items-center gap-1.5 text-xs font-bold text-brand-yellow hover:text-[#e0b410] mt-5 group transition-all self-start cursor-pointer font-sans"
+      >
         <span>View all pull requests</span>
         <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
       </button>

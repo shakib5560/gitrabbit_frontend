@@ -322,7 +322,7 @@ export default function UserDashboard() {
                 {/* Row 3: Pull Requests & Sidebar Extras Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
-                    <RecentPRs />
+                    <RecentPRs onViewAll={() => setActiveTab("prs")} />
                   </div>
                   <div>
                     <SidebarExtras coins={coins} transactions={transactions} />
