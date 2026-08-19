@@ -55,9 +55,9 @@ export interface CoinTransaction {
 export default function UserDashboard() {
   const backend = useBackendRequired();
 
-  useEffect(() => {
-    backend.open();
-  }, [backend]);
+  const [isTokenVerified, setIsTokenVerified] = useState(false);
+  const [tokenInput, setTokenInput] = useState("");
+  const [tokenError, setTokenError] = useState("");
 
   const [activeTab, setActiveTab] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
@@ -192,6 +192,53 @@ export default function UserDashboard() {
       }, 1200);
     }, 1000);
   };
+
+  const handleTokenSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (tokenInput === "shakib22shakib22") {
+      setIsTokenVerified(true);
+    } else {
+      setTokenError("Invalid token");
+    }
+  };
+
+  if (!isTokenVerified) {
+    return (
+      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white/[0.02] border border-white/[0.08] rounded-2xl p-8 shadow-2xl">
+          <h2 className="text-xl font-bold text-white mb-2 text-center">Dashboard Access</h2>
+          <p className="text-neutral-400 text-sm text-center mb-6">
+            Please enter your access token to view the dashboard.
+          </p>
+          <form onSubmit={handleTokenSubmit} className="space-y-4">
+            <div>
+              <input
+                type="text"
+                value={tokenInput}
+                onChange={(e) => {
+                  setTokenInput(e.target.value);
+                  setTokenError("");
+                }}
+                placeholder="Enter token..."
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/50 transition-all"
+              />
+              {tokenError && (
+                <p className="text-red-400 text-xs mt-2 text-center">
+                  {tokenError}
+                </p>
+              )}
+            </div>
+            <button
+              type="submit"
+              className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-3 font-bold text-sm transition-all cursor-pointer"
+            >
+              Submit Token
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container flex min-h-screen bg-bg-primary text-text-primary transition-colors duration-300">
