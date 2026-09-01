@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { motion, useInView } from "framer-motion";
@@ -22,25 +23,25 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { Modal } from "@/components/ui/Modal";
-import { useBackendRequired } from "@/hooks/useBackendRequired";
+
 
 const pricingPlans = [
   {
     name: "Starter",
     price: "0",
-    coins: "25",
-    description: "Perfect for trying out GitRabbit on your side projects.",
+    coins: "5",
+    description: "Start your free trial — perfect for trying GitRabbit on side projects.",
     icon: Gift,
     color: "from-gray-700 to-gray-900",
     accentColor: "#6B7280",
     features: [
-      "25 Rabbit Coins included",
+      "5 Rabbit Coins included (Free Trial)",
       "Basic AI PR Reviews",
       "Standard latency processing",
       "Community support",
       "GitHub Integration",
     ],
-    buttonText: "Claim Free Coins",
+    buttonText: "Start Free Trial",
     popular: false,
   },
   {
@@ -114,7 +115,7 @@ const FAQData = [
   },
   {
     q: "Is there a free trial?",
-    a: "Yes! The Starter plan gives you 25 free Rabbit Coins to experience full AI reviews with zero commitment.",
+    a: "Yes! The Starter plan gives you 5 free Rabbit Coins as a free trial to experience full AI reviews with zero commitment.",
   },
 ];
 
@@ -175,7 +176,7 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
 }
 
 export default function PricingPage() {
-  const backend = useBackendRequired();
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<"form" | "loading" | "success">("form");
@@ -191,7 +192,7 @@ export default function PricingPage() {
   const [notes, setNotes] = useState("");
 
   const handlePlanClick = (plan: any) => {
-    backend.open();
+    router.push("/login");
     return;
   };
 
@@ -565,7 +566,7 @@ export default function PricingPage() {
           selectedPlan?.name === "Enterprise"
             ? "Enterprise Request"
             : selectedPlan?.price === "0"
-            ? "Claim Free Coins"
+            ? "Start Free Trial"
             : "Purchase Plan"
         }
       >
@@ -623,7 +624,7 @@ export default function PricingPage() {
               </>
             ) : selectedPlan.price === "0" ? (
               <>
-                <p className="text-xs text-text-secondary">Ready to claim your free pack? Starter coins are limited to one claim per account.</p>
+                <p className="text-xs text-text-secondary">Ready to start your free trial? Starter coins are limited to one claim per account.</p>
                 <div>
                   <label className="block text-[10px] font-semibold text-text-secondary uppercase tracking-wider mb-1.5">Email Address</label>
                   <div className="relative">
@@ -670,7 +671,7 @@ export default function PricingPage() {
                 Cancel
               </button>
               <button type="submit" className="px-4 py-2 text-xs font-semibold rounded-xl bg-brand-yellow text-brand-black hover:brightness-110 transition-colors shadow-[2px_2px_0px_#FFFFFF] cursor-pointer">
-                {selectedPlan.name === "Enterprise" ? "Submit Sales Query" : selectedPlan.price === "0" ? "Claim Free Coins" : "Purchase Coins"}
+                {selectedPlan.name === "Enterprise" ? "Submit Sales Query" : selectedPlan.price === "0" ? "Start Free Trial" : "Purchase Coins"}
               </button>
             </div>
           </form>

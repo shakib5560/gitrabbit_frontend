@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useState, useCallback, ReactNode } from "react";
-import { BackendRequiredModal } from "@/components/backend-required-modal";
 
 interface BackendRequiredContextType {
   isOpen: boolean;
@@ -20,7 +19,6 @@ export function BackendRequiredProvider({ children }: { children: ReactNode }) {
   return (
     <BackendRequiredContext.Provider value={{ isOpen, open, close }}>
       {children}
-      <BackendRequiredModal isOpen={isOpen} onClose={close} />
     </BackendRequiredContext.Provider>
   );
 }
