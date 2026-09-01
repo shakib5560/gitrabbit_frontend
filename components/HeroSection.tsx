@@ -106,7 +106,7 @@ export const HeroSection = () => {
           {/* Pre-badge */}
           <motion.div
             variants={itemVariants}
-            className="flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/20 px-4 py-2 mb-6 text-brand-yellow text-[9px] font-press-start uppercase tracking-widest"
+            className="hidden md:flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/20 px-4 py-2 mb-6 text-brand-yellow text-[9px] font-press-start uppercase tracking-widest"
           >
             <motion.span
               animate={{ opacity: [1, 0.3, 1] }}
