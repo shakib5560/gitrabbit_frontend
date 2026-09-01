@@ -79,7 +79,7 @@ export const HeroSection = () => {
   return (
     <section
       ref={ref}
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 md:px-16 bg-brand-black overflow-hidden bg-pixel-grid"
+      className="relative min-h-screen flex items-center justify-center pt-36 md:pt-24 pb-16 px-6 md:px-16 bg-brand-black overflow-hidden bg-pixel-grid"
     >
       {/* Radial ambient glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-brand-yellow/5 rounded-full blur-[120px] pointer-events-none" />
