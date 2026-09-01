@@ -98,12 +98,12 @@ export function V2AnnouncementModal({ isOpen, onClose }: V2AnnouncementModalProp
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm"
             aria-hidden="true"
           />
 
           {/* Modal Container */}
-          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 pointer-events-none">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 pointer-events-none">
             <motion.div
               ref={modalRef}
               role="dialog"

@@ -332,15 +332,16 @@ export default function LoginPage() {
                   </Link>
                 </p>
 
-                <V2AnnouncementModal
-                  isOpen={isV2ModalOpen}
-                  onClose={() => setIsV2ModalOpen(false)}
-                />
               </div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      <V2AnnouncementModal
+        isOpen={isV2ModalOpen}
+        onClose={() => setIsV2ModalOpen(false)}
+      />
     </main>
   );
 }

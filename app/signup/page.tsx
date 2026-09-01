@@ -399,15 +399,16 @@ export default function SignupPage() {
                   By signing up, you agree to our Terms of Service and Privacy Policy.
                 </p>
 
-                <V2AnnouncementModal
-                  isOpen={isV2ModalOpen}
-                  onClose={() => setIsV2ModalOpen(false)}
-                />
               </div>
             </div>
           </motion.div>
         </div>
       </div>
+
+      <V2AnnouncementModal
+        isOpen={isV2ModalOpen}
+        onClose={() => setIsV2ModalOpen(false)}
+      />
     </main>
   );
 }
