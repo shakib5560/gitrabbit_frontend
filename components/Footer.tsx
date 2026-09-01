@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
-import { Rss } from "lucide-react";
+import { Rss, CheckCircle2, AlertCircle, Mail, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const footerLinks = {
   products: [
@@ -30,6 +34,194 @@ const footerLinks = {
   ],
   contact: ["Support", "Sales", "Pricing", "Partnerships"],
 };
+
+type SubscribeState = "idle" | "loading" | "success" | "error";
+
+function validateEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+function NewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [state, setState] = useState<SubscribeState>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleSubscribe = async () => {
+    // Reset any previous error
+    setErrorMsg("");
+
+    // Validate empty
+    if (!email.trim()) {
+      setErrorMsg("Please enter your email address.");
+      setState("error");
+      return;
+    }
+
+    // Validate format
+    if (!validateEmail(email)) {
+      setErrorMsg("Please enter a valid email address.");
+      setState("error");
+      return;
+    }
+
+    // Simulate async submission
+    setState("loading");
+    await new Promise((r) => setTimeout(r, 1200));
+    setState("success");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") handleSubscribe();
+  };
+
+  const handleReset = () => {
+    setEmail("");
+    setState("idle");
+    setErrorMsg("");
+  };
+
+  return (
+    <div className="relative">
+      <AnimatePresence mode="wait">
+        {state === "success" ? (
+          /* ── Success State ── */
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, scale: 0.92, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.92, y: -8 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex flex-col gap-3"
+          >
+            <div className="flex items-start gap-3 bg-emerald-500/10 border border-emerald-500/25 rounded-sm p-4">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.15, type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              </motion.div>
+              <div>
+                <motion.p
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-emerald-400 text-sm font-semibold"
+                >
+                  Thanks for subscribing!
+                </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.28 }}
+                  className="text-emerald-400/70 text-xs font-mono mt-0.5"
+                >
+                  You&apos;re now on our list. We&apos;ll be in touch.
+                </motion.p>
+              </div>
+            </div>
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              onClick={handleReset}
+              className="text-[10px] font-mono text-brand-muted hover:text-brand-yellow transition-colors underline underline-offset-2 self-start"
+            >
+              Subscribe with a different email
+            </motion.button>
+          </motion.div>
+        ) : (
+          /* ── Input State (idle / error / loading) ── */
+          <motion.div
+            key="form"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-col gap-2"
+          >
+            <motion.div
+              animate={
+                state === "error"
+                  ? { x: [0, -6, 6, -4, 4, 0] }
+                  : { x: 0 }
+              }
+              transition={{ duration: 0.4 }}
+              className={`flex items-center border bg-brand-dark p-1 transition-colors ${
+                state === "error"
+                  ? "border-red-500/60"
+                  : "border-brand-gray focus-within:border-brand-yellow"
+              }`}
+            >
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (state === "error") {
+                    setState("idle");
+                    setErrorMsg("");
+                  }
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder="youremail@domain.com"
+                disabled={state === "loading"}
+                className="bg-transparent border-none outline-none flex-grow px-4 py-2 text-sm text-brand-white placeholder:text-brand-muted font-mono disabled:opacity-50"
+              />
+              <button
+                onClick={handleSubscribe}
+                disabled={state === "loading"}
+                className="bg-brand-yellow text-brand-black px-4 py-2 text-[9px] md:text-[10px] font-press-start uppercase hover:brightness-110 transition-all shadow-[2px_2px_0px_#FFFFFF] disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-1.5 min-w-[90px] justify-center"
+              >
+                {state === "loading" ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  "Subscribe"
+                )}
+              </button>
+            </motion.div>
+
+            {/* Error message */}
+            <AnimatePresence>
+              {state === "error" && errorMsg && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, y: -4 }}
+                  animate={{ opacity: 1, height: "auto", y: 0 }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex items-center gap-1.5 overflow-hidden"
+                >
+                  <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                  <span className="text-red-400 text-[11px] font-mono">{errorMsg}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Terms note — only shown when not success */}
+      <AnimatePresence>
+        {state !== "success" && (
+          <motion.p
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="mt-4 text-[10px] text-brand-muted leading-relaxed"
+          >
+            By signing up you agree to our{" "}
+            <Link href="#" className="text-brand-yellow hover:underline">
+              Terms of Use
+            </Link>{" "}
+            and{" "}
+            <Link href="#" className="text-brand-yellow hover:underline">
+              Privacy Policy
+            </Link>
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export const Footer = () => {
   return (
@@ -66,15 +258,15 @@ export const Footer = () => {
               <ul className="flex flex-col gap-3">
                 {footerLinks.navigation.map((link) => (
                   <li key={link}>
-                    <Link 
+                    <Link
                       href={
-                        link === "Log in" ? "/login" : 
-                        link === "Start Free" ? "/signup" : 
+                        link === "Log in" ? "/login" :
+                        link === "Start Free" ? "/signup" :
                         link === "Pricing" ? "/pricing" :
                         link === "Changelog" ? "/changelog" :
                         link === "Features" ? "/#features" :
                         "#"
-                      } 
+                      }
                       className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200"
                     >
                       {link}
@@ -113,21 +305,7 @@ export const Footer = () => {
 
           {/* Subscription Section */}
           <div className="lg:col-span-4 flex flex-col gap-8">
-            <div className="relative">
-              <div className="flex items-center border border-brand-gray bg-brand-dark p-1 focus-within:border-brand-yellow transition-colors group">
-                <input
-                  type="email"
-                  placeholder="youremail@domain.com"
-                  className="bg-transparent border-none outline-none flex-grow px-4 py-2 text-sm text-brand-white placeholder:text-brand-muted font-mono"
-                />
-                <button className="bg-brand-yellow text-brand-black px-4 py-2 text-[9px] md:text-[10px] font-press-start uppercase hover:brightness-110 transition-all shadow-[2px_2px_0px_#FFFFFF]">
-                  Subscribe
-                </button>
-              </div>
-              <p className="mt-4 text-[10px] text-brand-muted leading-relaxed">
-                By signing up you agree to our <Link href="#" className="text-brand-yellow hover:underline">Terms of Use</Link> and <Link href="#" className="text-brand-yellow hover:underline">Privacy Policy</Link>
-              </p>
-            </div>
+            <NewsletterForm />
 
             <div className="flex items-center gap-6">
               {/* Discord */}
@@ -156,8 +334,10 @@ export const Footer = () => {
 
         {/* Large Background Text */}
         <div className="relative w-full overflow-hidden select-none pointer-events-none mb-12">
-          <h2 className="text-[3vw] md:text-[7.75vw] font-press-start font-bold leading-none tracking-tighter text-transparent"
-            style={{ WebkitTextStroke: "1px rgba(245, 197, 24, 0.2)" }}>
+          <h2
+            className="text-[3vw] md:text-[7.75vw] font-press-start font-bold leading-none tracking-tighter text-transparent"
+            style={{ WebkitTextStroke: "1px rgba(245, 197, 24, 0.2)" }}
+          >
             gitrabbit
           </h2>
         </div>
