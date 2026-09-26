@@ -222,6 +222,16 @@ export function V2AnnouncementModal({ isOpen, onClose }: V2AnnouncementModalProp
                         +880 1771-659336
                       </a>
                     </div>
+
+                    <div className="pt-6 border-t border-white/[0.06] flex items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={onClose}
+                        className="px-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white border border-white/10 text-xs font-mono uppercase tracking-wider transition-colors cursor-pointer"
+                      >
+                        Continue to Website
+                      </button>
+                    </div>
                   </div>
                 </div>
 

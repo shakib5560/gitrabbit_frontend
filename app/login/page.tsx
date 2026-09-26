@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Mail, Lock, Terminal, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { V2AnnouncementModal } from "@/components/v2-announcement-modal";
+import { V1GuestAccessModal } from "@/components/v1-guest-access-modal";
 import { useState, useEffect } from "react";
 
 /* ─── Orbiting ring animation ─── */
@@ -95,6 +96,14 @@ export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
+  const [isV1ModalOpen, setIsV1ModalOpen] = useState(false);
+
+  const handleCloseV2 = () => {
+    setIsV2ModalOpen(false);
+    setTimeout(() => {
+      setIsV1ModalOpen(true);
+    }, 350);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -340,7 +349,11 @@ export default function LoginPage() {
 
       <V2AnnouncementModal
         isOpen={isV2ModalOpen}
-        onClose={() => setIsV2ModalOpen(false)}
+        onClose={handleCloseV2}
+      />
+      <V1GuestAccessModal
+        isOpen={isV1ModalOpen}
+        onClose={() => setIsV1ModalOpen(false)}
       />
     </main>
   );

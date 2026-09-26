@@ -8,10 +8,12 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 import { V2AnnouncementModal } from "./v2-announcement-modal";
+import { V1GuestAccessModal } from "./v1-guest-access-modal";
 
 export const Navbar = () => {
 
   const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
+  const [isV1ModalOpen, setIsV1ModalOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -26,6 +28,13 @@ export const Navbar = () => {
       }
     }
   }, [pathname]);
+
+  const handleCloseV2 = () => {
+    setIsV2ModalOpen(false);
+    setTimeout(() => {
+      setIsV1ModalOpen(true);
+    }, 350);
+  };
 
   return (
     <>
@@ -93,7 +102,11 @@ export const Navbar = () => {
     </header>
       <V2AnnouncementModal 
         isOpen={isV2ModalOpen} 
-        onClose={() => setIsV2ModalOpen(false)} 
+        onClose={handleCloseV2} 
+      />
+      <V1GuestAccessModal
+        isOpen={isV1ModalOpen}
+        onClose={() => setIsV1ModalOpen(false)}
       />
     </>
   );

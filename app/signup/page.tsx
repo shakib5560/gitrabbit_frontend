@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Mail, Lock, User, CheckCircle2, Zap, Shield, GitBranch, ArrowRight, Sparkles } from "lucide-react";
 import { V2AnnouncementModal } from "@/components/v2-announcement-modal";
+import { V1GuestAccessModal } from "@/components/v1-guest-access-modal";
 import { useState, useEffect, useRef } from "react";
 
 /* ─── Floating particle component ─── */
@@ -129,6 +130,14 @@ export default function SignupPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
+  const [isV1ModalOpen, setIsV1ModalOpen] = useState(false);
+
+  const handleCloseV2 = () => {
+    setIsV2ModalOpen(false);
+    setTimeout(() => {
+      setIsV1ModalOpen(true);
+    }, 350);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -407,7 +416,11 @@ export default function SignupPage() {
 
       <V2AnnouncementModal
         isOpen={isV2ModalOpen}
-        onClose={() => setIsV2ModalOpen(false)}
+        onClose={handleCloseV2}
+      />
+      <V1GuestAccessModal
+        isOpen={isV1ModalOpen}
+        onClose={() => setIsV1ModalOpen(false)}
       />
     </main>
   );
