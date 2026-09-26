@@ -230,11 +230,47 @@ export const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
           {/* Logo Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block group">
-              <div className="">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/footerlogo.png" alt="gitrabbit" className="h-24 w-auto object-contain" />
-              </div>
+            <Link href="/" className="inline-block group" aria-label="GitRabbit Home">
+              <motion.div
+                whileHover={{ y: -6, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 350, damping: 18 }}
+                className="relative inline-flex flex-col items-center cursor-pointer"
+              >
+                {/* Floating Pixel Rabbit */}
+                <motion.div
+                  animate={{
+                    y: [0, -6, 0],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3.2,
+                    ease: "easeInOut",
+                  }}
+                  className="relative"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/footerlogo.png"
+                    alt="gitrabbit"
+                    className="h-24 w-auto object-contain transition-all duration-300 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_8px_24px_rgba(245,197,24,0.45)]"
+                  />
+                </motion.div>
+
+                {/* Ambient Soft Ground Shadow */}
+                <motion.div
+                  animate={{
+                    scaleX: [1, 0.8, 1],
+                    opacity: [0.45, 0.2, 0.45],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 3.2,
+                    ease: "easeInOut",
+                  }}
+                  className="w-16 h-1.5 bg-black/60 rounded-full blur-[2px] mt-1"
+                />
+              </motion.div>
             </Link>
           </div>
 

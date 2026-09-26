@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { PageLoader } from "@/components/PageLoader";
 import { BackendRequiredProvider } from "@/context/BackendRequiredContext";
+import { ProgressBarProvider } from "@/components/YouTubeProgressBar";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -66,8 +67,10 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <BackendRequiredProvider>
-            <PageLoader />
-            {children}
+            <ProgressBarProvider>
+              <PageLoader />
+              {children}
+            </ProgressBarProvider>
           </BackendRequiredProvider>
         </ThemeProvider>
       </body>
