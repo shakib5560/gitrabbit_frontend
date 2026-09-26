@@ -64,7 +64,8 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${spaceMono.variable} ${pixelifySans.variable} ${pressStart2P.variable} antialiased bg-brand-black text-brand-white selection:bg-brand-yellow selection:text-black`}
+        suppressHydrationWarning
+        className={`${inter.variable} ${spaceMono.variable} ${pixelifySans.variable} ${pressStart2P.variable} antialiased relative min-h-screen bg-brand-black text-brand-white selection:bg-brand-yellow selection:text-black`}
       >
         <ThemeProvider>
           <BackendRequiredProvider>

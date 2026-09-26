@@ -138,7 +138,7 @@ export function V2AnnouncementModal({ isOpen, onClose }: V2AnnouncementModalProp
                 {/* Header */}
                 <div className="space-y-4">
                   <div className="w-32 h-8 relative shrink-0 mb-4">
-                    <Image src="/mainlogo.png" alt="GitRabbit Logo" fill className="object-contain object-left" />
+                    <Image src="/mainlogo.png" alt="GitRabbit Logo" fill sizes="128px" className="object-contain object-left" />
                   </div>
                   <h2 id="modal-title" className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                     GitRabbit v2 is under construction

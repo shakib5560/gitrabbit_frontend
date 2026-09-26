@@ -6,6 +6,38 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "Server",
+          "value": "cloudflare"
+        },
+        {
+          "key": "cf-ray",
+          "value": "8f9a2b1c3d4e5f60-IAD"
+        },
+        {
+          "key": "cf-cache-status",
+          "value": "DYNAMIC"
+        },
+        {
+          "key": "x-amz-request-id",
+          "value": "3F8A7D9B2E1C40A5"
+        },
+        {
+          "key": "x-amz-id-2",
+          "value": "s8Y9zK1p3L4m7N5o9Q1r4S8t0U3v6W9x2Y5z8A1b4C7d0E3f6G9h2I5j8K1l4M7n"
+        },
+        {
+          "key": "Via",
+          "value": "1.1 9c42b10a51e604f8e.cloudfront.net (CloudFront)"
+        },
+        {
+          "key": "X-Amz-Cf-Id",
+          "value": "4_nE3Wp9L8ZqV1sB2c3D4e5F6g7H8i9J0k1L2m3N4o5P6=="
+        },
+        {
+          "key": "x-envoy-upstream-service-time",
+          "value": "18"
+        },
+        {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
         },

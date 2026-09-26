@@ -48,8 +48,38 @@
   --font-press-start: var(--font-press-start), cursive;
 }
 
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sleek custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #F5C518;
+}
+
 h1, h2 {
   font-family: var(--font-press-start);
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 @layer utilities {
