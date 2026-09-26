@@ -12,19 +12,20 @@ import {
   Trash2, 
   Shield, 
   Clock, 
-  Mail, 
   Check, 
-  TrendingUp, 
   Activity,
   AlertCircle
 } from "lucide-react";
+
+export type Role = "Owner" | "Admin" | "Reviewer" | "Developer" | "Viewer";
+export type InviteRole = "Admin" | "Reviewer" | "Developer" | "Viewer";
 
 interface TeamMember {
   id: string;
   name: string;
   email: string;
   github: string;
-  role: "Owner" | "Admin" | "Reviewer" | "Developer" | "Viewer";
+  role: Role;
   avatar: string;
   status: "online" | "offline" | "away";
   joinedDate: string;
@@ -169,7 +170,7 @@ export function TeamTab() {
     }
   };
 
-  const handleRoleChange = (id: string, newRole: any) => {
+  const handleRoleChange = (id: string, newRole: Role) => {
     setMembers(prev => prev.map(m => {
       if (m.id === id) {
         return { ...m, role: newRole };
@@ -363,7 +364,7 @@ export function TeamTab() {
                     <Shield size={12} className="text-text-muted" />
                     <select
                       value={member.role}
-                      onChange={(e) => handleRoleChange(member.id, e.target.value)}
+                      onChange={(e) => handleRoleChange(member.id, e.target.value as Role)}
                       className="bg-transparent text-xs text-text-secondary border-none focus:outline-none cursor-pointer font-bold font-sans hover:text-text-primary"
                     >
                       <option value="Admin" className="bg-bg-secondary">Admin</option>
@@ -478,7 +479,7 @@ export function TeamTab() {
                   <button
                     key={item.r}
                     type="button"
-                    onClick={() => setInviteRole(item.r as any)}
+                    onClick={() => setInviteRole(item.r as InviteRole)}
                     className={`text-left p-3 border rounded-xl flex flex-col gap-1 transition-all cursor-pointer ${
                       inviteRole === item.r
                         ? "border-brand-yellow bg-brand-yellow/5"

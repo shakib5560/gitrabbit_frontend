@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Rss, CheckCircle2, AlertCircle, Mail, Loader2 } from "lucide-react";
+import { Rss, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 

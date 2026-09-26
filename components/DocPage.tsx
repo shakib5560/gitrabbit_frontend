@@ -21,7 +21,7 @@ export interface DocStep {
 }
 
 export interface DocFeature {
-  icon: any;
+  icon: LucideIcon | React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
   title: string;
   desc: string;
 }

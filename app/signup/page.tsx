@@ -1,28 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Mail, Lock, User, CheckCircle2, Zap, Shield, GitBranch, ArrowRight, Sparkles } from "lucide-react";
 import { V2AnnouncementModal } from "@/components/v2-announcement-modal";
 import { V1GuestAccessModal } from "@/components/v1-guest-access-modal";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+
+/* ─── Static particle coordinates (pure, deterministic) ─── */
+const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
+  id: i,
+  x: ((i * 37 + 13) % 96) + 2,
+  y: ((i * 53 + 29) % 96) + 2,
+  size: ((i * 19) % 3) + 1.5,
+  duration: ((i * 23) % 15) + 12,
+  delay: (i * 0.4) % 5,
+}));
 
 /* ─── Floating particle component ─── */
 function FloatingParticles() {
-  const particles = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 3 + 1,
-    duration: Math.random() * 20 + 10,
-    delay: Math.random() * 5,
-  }));
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((p) => (
+      {PARTICLES.map((p) => (
         <motion.div
           key={p.id}
           className="absolute rounded-full bg-brand-yellow"
@@ -48,23 +48,24 @@ function FloatingParticles() {
   );
 }
 
+const TERMINAL_LINES = [
+  "$ gitrabbit init --project my-app",
+  "✓ Connected to repository",
+  "✓ AI model loaded",
+  "$ gitrabbit review --auto",
+  "⚡ Scanning 47 files...",
+  "✓ Found 3 optimizations",
+  "✓ Review complete in 2.3s",
+];
+
 /* ─── Terminal typing effect ─── */
 function TerminalTyping() {
-  const lines = [
-    "$ gitrabbit init --project my-app",
-    "✓ Connected to repository",
-    "✓ AI model loaded",
-    "$ gitrabbit review --auto",
-    "⚡ Scanning 47 files...",
-    "✓ Found 3 optimizations",
-    "✓ Review complete in 2.3s",
-  ];
   const [currentLine, setCurrentLine] = useState(0);
   const [currentChar, setCurrentChar] = useState(0);
   const [displayLines, setDisplayLines] = useState<string[]>([]);
 
   useEffect(() => {
-    if (currentLine >= lines.length) {
+    if (currentLine >= TERMINAL_LINES.length) {
       const timeout = setTimeout(() => {
         setCurrentLine(0);
         setCurrentChar(0);
@@ -73,20 +74,20 @@ function TerminalTyping() {
       return () => clearTimeout(timeout);
     }
 
-    if (currentChar < lines[currentLine].length) {
+    if (currentChar < TERMINAL_LINES[currentLine].length) {
       const timeout = setTimeout(() => {
         setCurrentChar((c) => c + 1);
-      }, 30 + Math.random() * 40);
+      }, 45);
       return () => clearTimeout(timeout);
     } else {
       const timeout = setTimeout(() => {
-        setDisplayLines((prev) => [...prev, lines[currentLine]]);
+        setDisplayLines((prev) => [...prev, TERMINAL_LINES[currentLine]]);
         setCurrentLine((l) => l + 1);
         setCurrentChar(0);
       }, 400);
       return () => clearTimeout(timeout);
     }
-  }, [currentLine, currentChar, lines]);
+  }, [currentLine, currentChar]);
 
   return (
     <div className="bg-[#080810] border border-gray-800/50 rounded-xl p-5 font-mono text-xs overflow-hidden">
@@ -111,9 +112,9 @@ function TerminalTyping() {
             {line}
           </div>
         ))}
-        {currentLine < lines.length && (
+        {currentLine < TERMINAL_LINES.length && (
           <div className="text-gray-300">
-            {lines[currentLine].substring(0, currentChar)}
+            {TERMINAL_LINES[currentLine].substring(0, currentChar)}
             <span className="animate-pulse text-brand-yellow">▋</span>
           </div>
         )}

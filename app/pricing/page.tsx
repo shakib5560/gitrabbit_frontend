@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Check,
   Sparkles,
@@ -175,9 +175,11 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   );
 }
 
+type PricingPlan = (typeof pricingPlans)[number];
+
 export default function PricingPage() {
   const router = useRouter();
-  const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [selectedPlan] = useState<PricingPlan | null>(null);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState<"form" | "loading" | "success">("form");
   const [hoveredPlan, setHoveredPlan] = useState<string | null>(null);
@@ -191,7 +193,7 @@ export default function PricingPage() {
   const [company, setCompany] = useState("");
   const [notes, setNotes] = useState("");
 
-  const handlePlanClick = (plan: any) => {
+  const handlePlanClick = (_plan?: PricingPlan) => {
     router.push("/login");
     return;
   };
@@ -594,7 +596,7 @@ export default function PricingPage() {
             {selectedPlan.name === "Enterprise" ? (
               <>
                 <p className="text-xs text-text-secondary">
-                  Please submit details below. We'll credit your wallet with <span className="text-brand-yellow font-bold">500 free demo coins</span> instantly to help you explore.
+                  Please submit details below. We&apos;ll credit your wallet with <span className="text-brand-yellow font-bold">500 free demo coins</span> instantly to help you explore.
                 </p>
                 <div>
                   <label className="block text-[10px] font-semibold text-text-secondary uppercase tracking-wider mb-1.5">Your Name</label>

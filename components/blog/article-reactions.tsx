@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ThumbsUp, Bookmark, Sparkles } from "lucide-react";
+import { ThumbsUp, Bookmark } from "lucide-react";
 
 interface ArticleReactionsProps {
   postId: number;
@@ -15,12 +15,12 @@ export function ArticleReactions({ postId }: ArticleReactionsProps) {
   useEffect(() => {
     try {
       const likedState = localStorage.getItem(`gitrabbit_liked_${postId}`);
-      if (likedState === "true") {
-        setHasLiked(true);
-      }
       const bookmarkState = localStorage.getItem(`gitrabbit_bookmark_${postId}`);
-      if (bookmarkState === "true") {
-        setIsBookmarked(true);
+      if (likedState === "true" || bookmarkState === "true") {
+        queueMicrotask(() => {
+          if (likedState === "true") setHasLiked(true);
+          if (bookmarkState === "true") setIsBookmarked(true);
+        });
       }
     } catch {
       // LocalStorage not available or SSR

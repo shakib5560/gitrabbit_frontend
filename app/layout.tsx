@@ -28,6 +28,7 @@ const pressStart2P = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://gitrabbit.com"),
   title: "gitrabbit - AI Code Reviews",
   description: "AI-powered code review SaaS tool.",
   icons: {
