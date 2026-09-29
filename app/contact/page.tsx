@@ -3,7 +3,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Mail,
@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function ContactPage() {
+function ContactFormInner() {
   const searchParams = useSearchParams();
   const initialType = searchParams.get("type") || "support";
   const [activeTab, setActiveTab] = useState(initialType);
@@ -223,5 +223,13 @@ export default function ContactPage() {
 
       <Footer />
     </main>
+  );
+}
+
+export default function ContactPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-brand-black" />}>
+      <ContactFormInner />
+    </Suspense>
   );
 }
