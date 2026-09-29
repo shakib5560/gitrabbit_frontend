@@ -10,7 +10,7 @@ import {
   Search, Menu, X, Globe, Terminal, Cpu, Lock, Zap,
   GitPullRequest, Brain, Users, Code, Shield, Puzzle,
   GitMerge, FlaskConical, BookOpen, BarChart3, MessageSquare,
-  Settings, Bug, FileText, Workflow, Eye, Database, Activity
+  Settings, Bug, FileText, Workflow, Eye, Database, Activity, FileCheck
 } from "lucide-react";
 import { Slack } from "@/components/Icons";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,6 +38,7 @@ const DOCS_NAV = [
   {
     title: "Codebase_Intelligence",
     items: [
+      { name: "Spec_Verification", href: "/docs/spec-verification", icon: FileCheck },
       { name: "Code_Graph", href: "/docs/code-graph", icon: Database },
       { name: "Team_Learnings", href: "/docs/team-learnings", icon: Brain },
       { name: "Language_Support", href: "/docs/languages", icon: Code },
@@ -219,17 +220,19 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 3px;
+          width: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #1A1A1A;
-          border-radius: 10px;
+          background: #F5C518;
+          border-radius: 9999px;
+          box-shadow: 0 0 6px rgba(245, 197, 24, 0.4);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: #F5C518;
+          background: #FFE066;
+          box-shadow: 0 0 10px rgba(245, 197, 24, 0.8);
         }
       `}</style>
     </div>

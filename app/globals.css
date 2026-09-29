@@ -55,21 +55,39 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Sleek custom scrollbar */
+/* Minimalist & Eye-Catching Yellow Custom Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #F5C518 transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
+
 ::-webkit-scrollbar-track {
-  background: #0A0A0A;
+  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 9999px;
-  transition: background 0.2s ease;
-}
-::-webkit-scrollbar-thumb:hover {
   background: #F5C518;
+  border-radius: 9999px;
+  box-shadow: 0 0 8px rgba(245, 197, 24, 0.45);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFE066;
+  box-shadow: 0 0 14px rgba(245, 197, 24, 0.85);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #E5B409;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 h1, h2 {
@@ -154,23 +172,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-}
-
-/* Premium Scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-primary);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-gold);
 }
 
 /* 3D Elevated Cards & Elements */

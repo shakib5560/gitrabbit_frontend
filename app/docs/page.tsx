@@ -5,7 +5,7 @@ import {
   Zap, Code, Terminal, ArrowRight, Activity, Cpu, Lock,
   GitPullRequest, Brain, Users, Shield, Puzzle, GitMerge,
   FlaskConical, BookOpen, BarChart3, MessageSquare,
-  Settings, Bug, FileText, Workflow, Eye, Database, Search, Globe
+  Settings, Bug, FileText, Workflow, Eye, Database, Search, Globe, FileCheck
 } from "lucide-react";
 import { Slack } from "@/components/Icons";
 import Link from "next/link";
@@ -38,6 +38,7 @@ const FEATURE_CATEGORIES = [
     label: "Codebase_Intelligence",
     color: "#A78BFA",
     features: [
+      { title: "Spec_Verification", icon: FileCheck, desc: "Verify AI-agent code against client requirements & project context.", href: "/docs/spec-verification" },
       { title: "Code_Graph", icon: Database, desc: "Full-codebase dependency analysis beyond just the diff.", href: "/docs/code-graph" },
       { title: "Team_Learnings", icon: Brain, desc: "Custom YAML rules that evolve with your team's coding style.", href: "/docs/team-learnings" },
       { title: "Language_Support", icon: Code, desc: "JS, TS, Python, Java, C#, Go, Rust, Ruby, PHP and more.", href: "/docs/languages" },

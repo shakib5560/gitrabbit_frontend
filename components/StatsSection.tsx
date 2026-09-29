@@ -7,19 +7,76 @@ import Image from "next/image";
 
 const iconMap: Record<string, React.ReactNode> = {
   Zap: (
-    <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor" className="text-brand-yellow w-10 h-10" shapeRendering="crispEdges">
-      <path d="M8 0H4v6H2v2h4v8h4v-6h2V6H8V0z" />
-    </svg>
+    <div className="relative w-11 h-11 md:w-12 md:h-12 bg-[#0E0E0E] border-2 border-brand-yellow/40 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#F5C518] group-hover:border-brand-yellow group-hover:shadow-[3px_3px_0px_#F5C518] group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+      <svg
+        viewBox="0 0 16 16"
+        width="28"
+        height="28"
+        fill="currentColor"
+        className="text-brand-yellow"
+        shapeRendering="crispEdges"
+      >
+        {/* Authentic 8-bit diagonal lightning bolt */}
+        <rect x="7" y="1" width="3" height="2" />
+        <rect x="6" y="3" width="3" height="2" />
+        <rect x="5" y="5" width="3" height="2" />
+        <rect x="2" y="7" width="11" height="2" />
+        <rect x="7" y="9" width="4" height="2" />
+        <rect x="6" y="11" width="3" height="2" />
+        <rect x="5" y="13" width="2" height="2" />
+      </svg>
+    </div>
   ),
   Shield: (
-    <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor" className="text-brand-yellow w-10 h-10" shapeRendering="crispEdges">
-      <path d="M2 2h12v2H2V2zm0 2H0v6h2v2h2v2h2v2h4v-2h2v-2h2v-2h2V4h-2zm6 8H6v-2H4V8H2V6h12v2h-2v2h-2v2H8zM8 6h2v2H8V6zm-2 2h2v2H6V8zm-2 2h2v2H4v-2z" />
-    </svg>
+    <div className="relative w-11 h-11 md:w-12 md:h-12 bg-[#0E0E0E] border-2 border-brand-yellow/40 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#F5C518] group-hover:border-brand-yellow group-hover:shadow-[3px_3px_0px_#F5C518] group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+      <svg
+        viewBox="0 0 16 16"
+        width="28"
+        height="28"
+        fill="currentColor"
+        className="text-brand-yellow"
+        shapeRendering="crispEdges"
+      >
+        {/* Authentic 8-bit knight shield with checkmark */}
+        <rect x="2" y="1" width="12" height="2" />
+        <rect x="1" y="3" width="14" height="4" />
+        <rect x="2" y="7" width="12" height="2" />
+        <rect x="3" y="9" width="10" height="2" />
+        <rect x="4" y="11" width="8" height="2" />
+        <rect x="6" y="13" width="4" height="1" />
+        <rect x="7" y="14" width="2" height="1" />
+        {/* Pixel checkmark cutout */}
+        <rect x="4" y="6" width="2" height="2" fill="#0E0E0E" />
+        <rect x="6" y="8" width="2" height="2" fill="#0E0E0E" />
+        <rect x="8" y="6" width="2" height="2" fill="#0E0E0E" />
+        <rect x="10" y="4" width="2" height="2" fill="#0E0E0E" />
+      </svg>
+    </div>
   ),
   Heart: (
-    <svg width="40" height="40" viewBox="0 0 16 16" fill="currentColor" className="text-brand-yellow w-10 h-10" shapeRendering="crispEdges">
-      <path d="M2 4h4v2h4V4h4v4h2v4h-2v2h-2v2h-2v2H8v-2H6v-2H4v-2H2v-2H0V8h2V4z" />
-    </svg>
+    <div className="relative w-11 h-11 md:w-12 md:h-12 bg-[#0E0E0E] border-2 border-brand-yellow/40 flex items-center justify-center shrink-0 shadow-[2px_2px_0px_#F5C518] group-hover:border-brand-yellow group-hover:shadow-[3px_3px_0px_#F5C518] group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 transition-all">
+      <svg
+        viewBox="0 0 16 16"
+        width="28"
+        height="28"
+        fill="currentColor"
+        className="text-brand-yellow"
+        shapeRendering="crispEdges"
+      >
+        {/* Classic 8-bit arcade gaming heart */}
+        <rect x="2" y="2" width="4" height="2" />
+        <rect x="10" y="2" width="4" height="2" />
+        <rect x="1" y="4" width="6" height="2" />
+        <rect x="9" y="4" width="6" height="2" />
+        <rect x="1" y="6" width="14" height="2" />
+        <rect x="2" y="8" width="12" height="2" />
+        <rect x="4" y="10" width="8" height="2" />
+        <rect x="6" y="12" width="4" height="2" />
+        <rect x="7" y="14" width="2" height="1" />
+        {/* Retro 8-bit shine glint */}
+        <rect x="3" y="4" width="2" height="2" fill="#FFFDE7" />
+      </svg>
+    </div>
   ),
 };
 
@@ -48,14 +105,14 @@ const StatItem = ({ stat }: { stat: typeof STATS[0] }) => {
   }, [isInView, stat.value]);
 
   return (
-    <div ref={ref} className="flex items-center gap-4 px-8 first:pl-0 last:pr-0 border-r border-gray-800 last:border-0">
+    <div ref={ref} className="group flex items-center gap-4 px-6 md:px-8 first:pl-0 last:pr-0 border-r border-gray-800/80 last:border-0 py-3">
       {iconMap[stat.icon]}
       <div>
-        <div className="text-4xl font-bold text-brand-white font-mono flex items-center">
+        <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-brand-white font-pixelify flex items-center tracking-tight">
           {count}
           {stat.suffix}
         </div>
-        <div className="text-gray-400 text-sm mt-1">{stat.label}</div>
+        <div className="text-gray-400 text-sm md:text-base font-pixelify tracking-wide mt-0.5">{stat.label}</div>
       </div>
     </div>
   );
@@ -68,9 +125,9 @@ export const StatsSection = () => {
         {/* LEFT */}
         <div className="flex items-center gap-6">
           <div className="w-16 h-16 relative shrink-0">
-            <Image src="/icon.png" alt="gitrabbit" fill className="object-contain" />
+            <Image src="/icon.png" alt="gitrabbit" fill sizes="64px" className="object-contain" />
           </div>
-          <h2 className="text-brand-white text-lg md:text-xl font-semibold font-press-start max-w-sm leading-tight">
+          <h2 className="text-brand-white text-base md:text-lg font-semibold font-press-start max-w-sm leading-snug">
             Better reviews.<br />
             Better code.<br />
             Built for speed.
@@ -78,7 +135,7 @@ export const StatsSection = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="flex flex-col md:flex-row items-center">
+        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-0">
           {STATS.map((stat, i) => (
             <StatItem key={i} stat={stat} />
           ))}

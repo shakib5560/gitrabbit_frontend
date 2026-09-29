@@ -219,7 +219,7 @@ export const HeroSection = () => {
               className="relative w-full h-full"
             >
               <Image
-                src="/hero_image.png"
+                src="/hero1.png"
                 alt="GitRabbit AI"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"

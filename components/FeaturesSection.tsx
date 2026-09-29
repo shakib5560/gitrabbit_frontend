@@ -24,6 +24,7 @@ import {
   Lock,
   BarChart2,
   SearchCode,
+  FileCheck,
   ArrowRight,
 } from "lucide-react";
 
@@ -49,6 +50,7 @@ const iconMap: Record<string, React.ElementType> = {
   Lock,
   BarChart2,
   SearchCode,
+  FileCheck,
 };
 
 const categories = [

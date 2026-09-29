@@ -7,32 +7,38 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const footerLinks = {
   products: [
-    "Agent",
-    "Pull Request Reviews",
-    "IDE Reviews",
-    "CLI Reviews",
-    "Plan",
-    "OSS",
+    { name: "Agent", href: "/docs/agentic-chat" },
+    { name: "Pull Request Reviews", href: "/docs/reviews" },
+    { name: "IDE Reviews", href: "/docs/ide" },
+    { name: "CLI Reviews", href: "/docs/cli" },
+    { name: "Plan", href: "/docs/plan" },
+    { name: "OSS", href: "/oss" },
   ],
   navigation: [
-    "About Us",
-    "Features",
-    "Pricing",
-    "Changelog",
-    "Log in",
-    "Start Free",
-    "System Status",
+    { name: "About Us", href: "/about" },
+    { name: "Features", href: "/#features" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Changelog", href: "/changelog" },
+    { name: "Log in", href: "/login" },
+    { name: "Start Free", href: "/signup" },
+    { name: "System Status", href: "/status" },
   ],
   resources: [
-    "Blog",
-    "Docs",
-    "Changelog",
-    "Case Studies",
-    "Trust Center",
-    "Brand Guidelines",
-    "Reports & Guides",
+    { name: "Blog", href: "/blog" },
+    { name: "Docs", href: "/docs" },
+    { name: "Changelog", href: "/changelog" },
+    { name: "Case Studies", href: "/case-studies" },
+    { name: "Trust Center", href: "/trust" },
+    { name: "Brand Guidelines", href: "/brand" },
+    { name: "Reports & Guides", href: "/docs" },
+    { name: "Terms & Conditions", href: "/terms" },
   ],
-  contact: ["Support", "Sales", "Pricing", "Partnerships"],
+  contact: [
+    { name: "Support", href: "/contact?type=support" },
+    { name: "Sales", href: "/contact?type=sales" },
+    { name: "Pricing", href: "/pricing" },
+    { name: "Partnerships", href: "/contact?type=partnerships" },
+  ],
 };
 
 type SubscribeState = "idle" | "loading" | "success" | "error";
@@ -209,11 +215,11 @@ function NewsletterForm() {
             className="mt-4 text-[10px] text-brand-muted leading-relaxed"
           >
             By signing up you agree to our{" "}
-            <Link href="#" className="text-brand-yellow hover:underline">
+            <Link href="/terms" className="text-brand-yellow hover:underline">
               Terms of Use
             </Link>{" "}
             and{" "}
-            <Link href="#" className="text-brand-yellow hover:underline">
+            <Link href="/privacy" className="text-brand-yellow hover:underline">
               Privacy Policy
             </Link>
           </motion.p>
@@ -280,9 +286,9 @@ export const Footer = () => {
               <h3 className="font-pixelify text-brand-yellow text-sm uppercase tracking-wider font-bold">Products</h3>
               <ul className="flex flex-col gap-3">
                 {footerLinks.products.map((link) => (
-                  <li key={link}>
-                    <Link href="#" className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
-                      {link}
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -293,19 +299,12 @@ export const Footer = () => {
               <h3 className="font-pixelify text-brand-yellow text-sm uppercase tracking-wider font-bold">Navigation</h3>
               <ul className="flex flex-col gap-3">
                 {footerLinks.navigation.map((link) => (
-                  <li key={link}>
+                  <li key={link.name}>
                     <Link
-                      href={
-                        link === "Log in" ? "/login" :
-                        link === "Start Free" ? "/signup" :
-                        link === "Pricing" ? "/pricing" :
-                        link === "Changelog" ? "/changelog" :
-                        link === "Features" ? "/#features" :
-                        "#"
-                      }
+                      href={link.href}
                       className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200"
                     >
-                      {link}
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -316,9 +315,9 @@ export const Footer = () => {
               <h3 className="font-pixelify text-brand-yellow text-sm uppercase tracking-wider font-bold">Resources</h3>
               <ul className="flex flex-col gap-3">
                 {footerLinks.resources.map((link) => (
-                  <li key={link}>
-                    <Link href="#" className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
-                      {link}
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -329,9 +328,9 @@ export const Footer = () => {
               <h3 className="font-pixelify text-brand-yellow text-sm uppercase tracking-wider font-bold">Contact</h3>
               <ul className="flex flex-col gap-3">
                 {footerLinks.contact.map((link) => (
-                  <li key={link}>
-                    <Link href="#" className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
-                      {link}
+                  <li key={link.name}>
+                    <Link href={link.href} className="text-brand-muted hover:text-brand-white text-sm transition-colors duration-200">
+                      {link.name}
                     </Link>
                   </li>
                 ))}
@@ -381,8 +380,8 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 border-t border-brand-gray pt-8 text-[11px] text-brand-muted uppercase tracking-widest font-mono">
           <div className="flex items-center gap-8">
-            <Link href="#" className="hover:text-brand-white transition-colors">Terms of Service</Link>
-            <Link href="#" className="hover:text-brand-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-brand-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-brand-white transition-colors">Privacy Policy</Link>
             <span>gitrabbit Inc &copy; {new Date().getFullYear()}</span>
           </div>
           <div className="flex items-center gap-2 cursor-pointer hover:text-brand-white transition-colors">

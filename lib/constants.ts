@@ -78,6 +78,12 @@ export const ALL_FEATURES = [
   },
   {
     category: "Codebase Intelligence",
+    icon: "FileCheck",
+    title: "Spec & Context Verification",
+    desc: "Enables the engine to parse client requirements & project context, then verify whether AI-agent-written code aligns with intended specs.",
+  },
+  {
+    category: "Codebase Intelligence",
     icon: "Brain",
     title: "Team Learnings",
     desc: "Learns from your team's coding styles and captures custom organizational rules via YAML files.",
