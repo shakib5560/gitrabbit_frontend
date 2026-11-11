@@ -158,7 +158,7 @@ export function SuggestionsTab({ coins, setCoins }: { coins: number; setCoins: (
       {/* Suggestion proposals listing */}
       {activeSuggestions.length === 0 ? (
         <Card hoverGlow={false} animate={true} className="flex flex-col items-center justify-center py-16 text-center bg-bg-secondary border-border-primary">
-          <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 mb-4 animate-bounce">
+          <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500 mb-4">
             <Check size={28} />
           </div>
           <h4 className="text-base font-bold text-text-primary">All caught up!</h4>

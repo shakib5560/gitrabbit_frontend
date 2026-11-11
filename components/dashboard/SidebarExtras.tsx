@@ -181,7 +181,7 @@ export function SidebarExtras({ coins, transactions }: SidebarExtrasProps) {
             <h3 className="text-xs font-bold text-text-primary tracking-wider font-sans uppercase">
               Activity Feed
             </h3>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           </div>
 
           <div className="relative border-l border-border-primary/50 pl-4 ml-1.5 space-y-4">

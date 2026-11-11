@@ -25,12 +25,12 @@ export default function StatusPage() {
 
         <div className="relative z-10 max-w-5xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22 }}
             className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full mb-6"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
             </span>
             <span className="text-emerald-400 text-[10px] md:text-xs font-mono uppercase tracking-widest font-semibold">
@@ -39,18 +39,18 @@ export default function StatusPage() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.24, delay: 0.04 }}
             className="text-2xl sm:text-3xl md:text-5xl font-bold font-press-start leading-tight mb-6"
           >
             System <span className="text-emerald-400">Status</span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.24, delay: 0.08 }}
             className="text-gray-400 text-sm md:text-base font-mono max-w-2xl mx-auto leading-relaxed"
           >
             Real-time performance, review latency, and operational health across our global code review clusters.

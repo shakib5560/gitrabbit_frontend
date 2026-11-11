@@ -5,11 +5,13 @@ import React, {
   useContext,
   useState,
   useEffect,
+  useLayoutEffect,
   useCallback,
   useRef,
   Suspense,
 } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { MotionConfig } from "framer-motion";
 
 interface ProgressBarContextType {
   start: () => void;
@@ -18,6 +20,8 @@ interface ProgressBarContextType {
   isLoading: boolean;
   progress: number;
   visible: boolean;
+  registerElements: (container: HTMLDivElement | null, bar: HTMLDivElement | null) => void;
+  unregisterElements: (container: HTMLDivElement | null, bar: HTMLDivElement | null) => void;
 }
 
 const ProgressBarContext = createContext<ProgressBarContextType>({
@@ -27,9 +31,20 @@ const ProgressBarContext = createContext<ProgressBarContextType>({
   isLoading: false,
   progress: 0,
   visible: false,
+  registerElements: () => {},
+  unregisterElements: () => {},
 });
 
 export const useProgressBar = () => useContext(ProgressBarContext);
+
+function smoothstep(edge0: number, edge1: number, x: number): number {
+  const t = Math.max(0, Math.min(1, (x - edge0) / (edge1 - edge0)));
+  return t * t * (3 - 2 * t);
+}
+
+function easeOutCubic(t: number): number {
+  return 1 - Math.pow(1 - t, 3);
+}
 
 function RouteWatcher({ onComplete }: { onComplete: () => void }) {
   const pathname = usePathname();
@@ -41,78 +56,227 @@ function RouteWatcher({ onComplete }: { onComplete: () => void }) {
       isFirstMount.current = false;
       return;
     }
-    // Route navigation completed
     onComplete();
   }, [pathname, searchParams, onComplete]);
 
   return null;
 }
 
+type AnimPhase = "idle" | "running" | "completing" | "holding" | "fading";
+
 export function ProgressBarProvider({ children }: { children: React.ReactNode }) {
-  const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const trickleRef = useRef<NodeJS.Timeout | null>(null);
-  const fadeRef = useRef<NodeJS.Timeout | null>(null);
-  const resetRef = useRef<NodeJS.Timeout | null>(null);
+  const containerElRef = useRef<HTMLDivElement | null>(null);
+  const barElRef = useRef<HTMLDivElement | null>(null);
 
-  const clearAllTimers = () => {
-    if (trickleRef.current) clearInterval(trickleRef.current);
-    if (fadeRef.current) clearTimeout(fadeRef.current);
-    if (resetRef.current) clearTimeout(resetRef.current);
-  };
+  const animRef = useRef<{
+    phase: AnimPhase;
+    value: number; // 0..1
+    opacity: number; // 0..1
+    lastTime: number;
+    phaseStartTime: number;
+    completeFrom: number;
+    completeDuration: number;
+    rafId: number | null;
+  }>({
+    phase: "idle",
+    value: 0,
+    opacity: 0,
+    lastTime: 0,
+    phaseStartTime: 0,
+    completeFrom: 0,
+    completeDuration: 240,
+    rafId: null,
+  });
+
+  const paint = useCallback(() => {
+    const { value, opacity } = animRef.current;
+    if (barElRef.current) {
+      barElRef.current.style.transform = `scaleX(${value})`;
+    }
+    if (containerElRef.current) {
+      containerElRef.current.style.opacity = `${opacity}`;
+    }
+  }, []);
+
+  const stopRaf = useCallback(() => {
+    if (animRef.current.rafId !== null) {
+      cancelAnimationFrame(animRef.current.rafId);
+      animRef.current.rafId = null;
+    }
+  }, []);
+
+  const tickRef = useRef<(now: number) => void>(() => {});
+
+  useEffect(() => {
+    tickRef.current = (now: number) => {
+      const anim = animRef.current;
+      const dt = Math.min(0.05, Math.max(0.001, (now - anim.lastTime) / 1000));
+      anim.lastTime = now;
+
+      if (anim.phase === "running") {
+        const v = anim.value;
+        // Smooth 3-tier YouTube pacing with blended velocity transitions:
+        // 1) Initial surge (0 -> ~35%): quick responsive takeoff
+        // 2) Cruise (~35% -> ~72%): steady decelerating glide
+        // 3) Tail crawl (~72% -> 94%): gentle asymptotic drift while waiting
+        const surgeSpeed = 2.35 * (1 - v * 0.55);
+        const cruiseSpeed = 0.62 * (1.05 - v);
+        const crawlSpeed = Math.max(0.015, (0.94 - v) * 0.45);
+
+        const blend1 = smoothstep(0.24, 0.4, v);
+        const blend2 = smoothstep(0.64, 0.78, v);
+
+        const speedToCruise = surgeSpeed * (1 - blend1) + cruiseSpeed * blend1;
+        const speed = speedToCruise * (1 - blend2) + crawlSpeed * blend2;
+
+        anim.value = Math.min(0.94, v + speed * dt);
+        anim.opacity = 1;
+        paint();
+        anim.rafId = requestAnimationFrame((t) => tickRef.current(t));
+        return;
+      }
+
+      if (anim.phase === "completing") {
+        const elapsed = now - anim.phaseStartTime;
+        const t = Math.min(1, elapsed / anim.completeDuration);
+        const eased = easeOutCubic(t);
+        anim.value = anim.completeFrom + (1 - anim.completeFrom) * eased;
+        anim.opacity = 1;
+        paint();
+
+        if (t >= 1) {
+          anim.phase = "holding";
+          anim.phaseStartTime = now;
+        }
+        anim.rafId = requestAnimationFrame((next) => tickRef.current(next));
+        return;
+      }
+
+      if (anim.phase === "holding") {
+        if (now - anim.phaseStartTime >= 90) {
+          anim.phase = "fading";
+          anim.phaseStartTime = now;
+        }
+        anim.rafId = requestAnimationFrame((next) => tickRef.current(next));
+        return;
+      }
+
+      if (anim.phase === "fading") {
+        const t = Math.min(1, (now - anim.phaseStartTime) / 240);
+        anim.opacity = 1 - easeOutCubic(t);
+        paint();
+
+        if (t >= 1) {
+          anim.phase = "idle";
+          anim.value = 0;
+          anim.opacity = 0;
+          anim.rafId = null;
+          setVisible(false);
+          setProgress(0);
+          return;
+        }
+        anim.rafId = requestAnimationFrame((next) => tickRef.current(next));
+        return;
+      }
+
+      anim.rafId = null;
+    };
+  }, [paint]);
+
+  const ensureRunningLoop = useCallback(() => {
+    if (animRef.current.rafId === null) {
+      animRef.current.lastTime = performance.now();
+      animRef.current.rafId = requestAnimationFrame((t) => tickRef.current(t));
+    }
+  }, []);
+
+  const registerElements = useCallback(
+    (container: HTMLDivElement | null, bar: HTMLDivElement | null) => {
+      containerElRef.current = container;
+      barElRef.current = bar;
+      if (container || bar) {
+        paint();
+      }
+    },
+    [paint]
+  );
+
+  const unregisterElements = useCallback(
+    (container: HTMLDivElement | null, bar: HTMLDivElement | null) => {
+      if (containerElRef.current === container) {
+        containerElRef.current = null;
+      }
+      if (barElRef.current === bar) {
+        barElRef.current = null;
+      }
+    },
+    []
+  );
 
   const start = useCallback(() => {
-    clearAllTimers();
+    stopRaf();
+    const now = performance.now();
+    animRef.current.phase = "running";
+    animRef.current.value = 0;
+    animRef.current.opacity = 1;
+    animRef.current.lastTime = now;
+    animRef.current.phaseStartTime = now;
+
     setVisible(true);
     setIsLoading(true);
-    // Instant silky jump to 28%
-    setProgress(28);
-
-    // Natural fluid deceleration
-    let current = 28;
-    trickleRef.current = setInterval(() => {
-      // Smooth asymptotic curve towards 88%
-      const step = Math.max(0.4, (88 - current) * 0.12);
-      current = Math.min(88, current + step);
-      setProgress(current);
-
-      if (current >= 88 && trickleRef.current) {
-        clearInterval(trickleRef.current);
-      }
-    }, 220);
-  }, []);
+    setProgress(1);
+    paint();
+    ensureRunningLoop();
+  }, [ensureRunningLoop, paint, stopRaf]);
 
   const complete = useCallback(() => {
-    if (trickleRef.current) clearInterval(trickleRef.current);
+    const anim = animRef.current;
+    if (anim.phase === "idle" || anim.phase === "fading") {
+      return;
+    }
 
-    // Swift smooth glide to 100%
-    setProgress(100);
+    const now = performance.now();
+    const remaining = Math.max(0, 1 - anim.value);
+    // Keep fast route transitions feeling fluid and never abrupt
+    anim.completeFrom = anim.value;
+    anim.completeDuration = Math.max(200, Math.min(340, 180 + remaining * 180));
+    anim.phase = "completing";
+    anim.phaseStartTime = now;
+    anim.lastTime = now;
+
     setIsLoading(false);
-
-    // Fade out after completion
-    fadeRef.current = setTimeout(() => {
-      setVisible(false);
-      resetRef.current = setTimeout(() => {
-        setProgress(0);
-      }, 350);
-    }, 260);
-  }, []);
+    setProgress(100);
+    ensureRunningLoop();
+  }, [ensureRunningLoop]);
 
   const setManual = useCallback(
     (percentage: number) => {
-      clearAllTimers();
-      setVisible(true);
+      stopRaf();
       const val = Math.min(100, Math.max(0, percentage));
+      const norm = val / 100;
+
+      animRef.current.value = norm;
+      animRef.current.opacity = 1;
+      setVisible(true);
       setProgress(val);
       setIsLoading(val < 100);
 
       if (val >= 100) {
-        complete();
+        animRef.current.phase = "completing";
+        animRef.current.completeFrom = norm;
+        animRef.current.completeDuration = 120;
+        animRef.current.phaseStartTime = performance.now();
+        ensureRunningLoop();
+      } else {
+        animRef.current.phase = "running";
+        paint();
       }
     },
-    [complete]
+    [ensureRunningLoop, paint, stopRaf]
   );
 
   // Global click listener for internal link navigation
@@ -167,9 +331,9 @@ export function ProgressBarProvider({ children }: { children: React.ReactNode })
     return () => {
       document.removeEventListener("click", handleDocumentClick, { capture: true });
       window.removeEventListener("popstate", handlePopState);
-      clearAllTimers();
+      stopRaf();
     };
-  }, [start]);
+  }, [start, stopRaf]);
 
   return (
     <ProgressBarContext.Provider
@@ -180,57 +344,59 @@ export function ProgressBarProvider({ children }: { children: React.ReactNode })
         isLoading,
         progress,
         visible,
+        registerElements,
+        unregisterElements,
       }}
     >
       <Suspense fallback={null}>
         <RouteWatcher onComplete={complete} />
       </Suspense>
-      {children}
+      <MotionConfig reducedMotion="user" transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}>
+        {children}
+      </MotionConfig>
     </ProgressBarContext.Provider>
   );
 }
 
 /**
- * YouTube-style Minimalistic Progress Bar UI Component
- * Ultra-thin 1.5px hairline with silky transform animation and zero bulky glow or corner light.
+ * YouTube-style Progress Bar UI Component
+ * Docked seamlessly along the bottom edge of the navbar, driven at display refresh rate
+ * via GPU scaleX with smooth multi-phase pace transitions.
  */
 export function YouTubeProgressBar() {
-  const { progress, visible } = useProgressBar();
+  const { visible, registerElements, unregisterElements } = useProgressBar();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const barRef = useRef<HTMLDivElement | null>(null);
 
-  if (!visible && progress === 0) return null;
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const bar = barRef.current;
+    if (visible) {
+      registerElements(container, bar);
+    }
+    return () => {
+      unregisterElements(container, bar);
+    };
+  }, [visible, registerElements, unregisterElements]);
 
-  const scale = progress / 100;
-  const isFinishing = progress >= 100;
+  if (!visible) return null;
 
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
-      className="absolute bottom-0 left-0 right-0 h-[1.5px] z-50 pointer-events-none overflow-hidden"
-      style={{
-        opacity: visible ? 1 : 0,
-        transition: "opacity 320ms cubic-bezier(0.16, 1, 0.3, 1)",
-      }}
+      className="absolute bottom-0 left-0 right-0 h-[2px] z-50 pointer-events-none overflow-hidden"
+      style={{ opacity: 1, willChange: "opacity" }}
     >
-      {/* Precision Hairline Progress Thread with GPU scaleX */}
       <div
-        className="w-full h-full origin-left bg-gradient-to-r from-transparent via-[#F5C518]/70 to-[#F5C518]"
+        ref={barRef}
+        className="w-full h-full origin-left bg-gradient-to-r from-[#F5C518]/85 via-[#F5C518] to-[#FFF0A8]"
         style={{
-          transform: `scaleX(${scale})`,
-          transition: isFinishing
-            ? "transform 240ms cubic-bezier(0.2, 0.9, 0.3, 1)"
-            : "transform 420ms cubic-bezier(0.16, 1, 0.3, 1)",
-          boxShadow: "0 1px 4px rgba(245, 197, 24, 0.35)",
+          transform: "scaleX(0)",
+          willChange: "transform",
+          boxShadow: "0 0 8px rgba(245, 197, 24, 0.35)",
         }}
-      >
-        {/* Subtle, soft traveling light wave inside the thread */}
-        <div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-          style={{
-            animation: "shimmer 2.2s linear infinite",
-            backgroundSize: "200% 100%",
-          }}
-        />
-      </div>
+      />
     </div>
   );
 }

@@ -85,13 +85,13 @@ export const SpecVerificationSection = () => {
         {/* Section Header */}
         <div className="text-center max-w-4xl mx-auto mb-16 px-4">
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 6 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.24 }}
             className="inline-flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/30 px-3.5 py-1.5 rounded-full mb-6"
           >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
             </span>
             <span className="text-brand-yellow text-[9px] sm:text-[10px] md:text-xs font-mono uppercase tracking-widest font-bold">
@@ -100,10 +100,10 @@ export const SpecVerificationSection = () => {
           </motion.div>
 
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
+            transition={{ duration: 0.26, delay: 0.04 }}
             className="text-brand-white text-base sm:text-xl md:text-2xl lg:text-[28px] xl:text-[32px] font-bold font-press-start leading-normal sm:leading-relaxed md:leading-[1.7] mb-6 max-w-3xl mx-auto"
           >
             <span className="block mb-2 sm:mb-3">
@@ -115,10 +115,10 @@ export const SpecVerificationSection = () => {
           </motion.h2>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
+            transition={{ duration: 0.26, delay: 0.08 }}
             className="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed font-mono max-w-2xl mx-auto"
           >
             Autonomous AI agents write code in seconds—but do they satisfy the client&apos;s actual requirements?
@@ -131,11 +131,11 @@ export const SpecVerificationSection = () => {
           {AUDIT_STEPS.map((step, idx) => (
             <motion.div
               key={idx}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 8 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.08 }}
-              className="bg-[#0C0C0C] border border-gray-800/80 hover:border-brand-yellow/40 rounded-xl p-5 flex flex-col justify-between transition-all group"
+              transition={{ duration: 0.24, delay: idx * 0.03 }}
+              className="bg-[#0C0C0C] border border-gray-800/80 hover:border-brand-yellow/40 rounded-xl p-5 flex flex-col justify-between transition-colors group"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
@@ -346,7 +346,7 @@ export const SpecVerificationSection = () => {
               {/* Bot Meta Info */}
               <div className="pt-4 mt-6 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-gray-500">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
                   <span>GitRabbit PR Gate: Automated Analysis Complete</span>
                 </div>
                 <span className="text-gray-400 font-semibold">Zero Hallucinations Verified</span>
@@ -357,11 +357,8 @@ export const SpecVerificationSection = () => {
 
         {/* 4 Feature Pillar Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="bg-[#0E0E0E] border border-gray-800 hover:border-brand-yellow/40 rounded-2xl p-6 transition-all group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-brand-yellow/10 border border-brand-yellow/30 flex items-center justify-center mb-4 text-brand-yellow group-hover:scale-110 transition-transform">
+          <div className="bg-[#0E0E0E] border border-gray-800 hover:border-brand-yellow/40 rounded-2xl p-6 transition-colors group">
+            <div className="w-10 h-10 rounded-xl bg-brand-yellow/10 border border-brand-yellow/30 flex items-center justify-center mb-4 text-brand-yellow">
               <FileCheck className="w-5 h-5" />
             </div>
             <h3 className="text-brand-white text-sm font-semibold font-press-start mb-2 leading-snug">
@@ -370,13 +367,10 @@ export const SpecVerificationSection = () => {
             <p className="text-gray-400 text-xs font-mono leading-relaxed">
               Pulls acceptance criteria directly from Jira, Linear, or repo Markdown documents into automated constraint models.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="bg-[#0E0E0E] border border-gray-800 hover:border-blue-500/40 rounded-2xl p-6 transition-all group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-4 text-blue-400 group-hover:scale-110 transition-transform">
+          <div className="bg-[#0E0E0E] border border-gray-800 hover:border-blue-500/40 rounded-2xl p-6 transition-colors group">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center mb-4 text-blue-400">
               <Database className="w-5 h-5" />
             </div>
             <h3 className="text-brand-white text-sm font-semibold font-press-start mb-2 leading-snug">
@@ -385,13 +379,10 @@ export const SpecVerificationSection = () => {
             <p className="text-gray-400 text-xs font-mono leading-relaxed">
               Cross-references Prisma schemas, auth middleware, and existing APIs so agents don&apos;t bypass established code rules.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="bg-[#0E0E0E] border border-gray-800 hover:border-purple-500/40 rounded-2xl p-6 transition-all group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-400 group-hover:scale-110 transition-transform">
+          <div className="bg-[#0E0E0E] border border-gray-800 hover:border-purple-500/40 rounded-2xl p-6 transition-colors group">
+            <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center mb-4 text-purple-400">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <h3 className="text-brand-white text-sm font-semibold font-press-start mb-2 leading-snug">
@@ -400,13 +391,10 @@ export const SpecVerificationSection = () => {
             <p className="text-gray-400 text-xs font-mono leading-relaxed">
               Catches when AI agents create code that compiles and passes unit tests, yet fundamentally violates client business logic.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="bg-[#0E0E0E] border border-gray-800 hover:border-emerald-500/40 rounded-2xl p-6 transition-all group"
-          >
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-4 text-emerald-400 group-hover:scale-110 transition-transform">
+          <div className="bg-[#0E0E0E] border border-gray-800 hover:border-emerald-500/40 rounded-2xl p-6 transition-colors group">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-4 text-emerald-400">
               <Sparkles className="w-5 h-5" />
             </div>
             <h3 className="text-brand-white text-sm font-semibold font-press-start mb-2 leading-snug">
@@ -415,7 +403,7 @@ export const SpecVerificationSection = () => {
             <p className="text-gray-400 text-xs font-mono leading-relaxed">
               Feeds exact, structured correction instructions back to the coding agent so the code is fixed before human engineers review.
             </p>
-          </motion.div>
+          </div>
         </div>
 
         {/* Supported AI Agent Ecosystem */}

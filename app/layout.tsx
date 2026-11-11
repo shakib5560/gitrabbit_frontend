@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Space_Mono, Pixelify_Sans, Press_Start_2P } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
-import { PageLoader } from "@/components/PageLoader";
 import { BackendRequiredProvider } from "@/context/BackendRequiredContext";
 import { ProgressBarProvider } from "@/components/YouTubeProgressBar";
 const inter = Inter({
@@ -70,7 +69,6 @@ export default function RootLayout({
         <ThemeProvider>
           <BackendRequiredProvider>
             <ProgressBarProvider>
-              <PageLoader />
               {children}
             </ProgressBarProvider>
           </BackendRequiredProvider>

@@ -1,22 +1,23 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
 import { Zap, Shield, Code, ArrowRight } from "lucide-react";
+
+const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.12 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: EASE_OUT } },
 };
 
 const BADGES = [
@@ -25,7 +26,7 @@ const BADGES = [
   { icon: Code, label: "50+ Linters" },
 ];
 
-// Animated floating badge on the hero image
+// Subtle floating badge on the hero image (calm, grounded positioning)
 function FloatingBadge({
   children,
   className,
@@ -37,48 +38,33 @@ function FloatingBadge({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay, duration: 0.5 }}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.28, ease: EASE_OUT }}
       className={`absolute z-20 ${className}`}
     >
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay }}
-      >
-        {children}
-      </motion.div>
+      {children}
     </motion.div>
   );
 }
 
-// Animated pixel dot in orbit
-function OrbitDot({ angle, radius, delay }: { angle: number; radius: number; delay: number }) {
+// Crisp static pixel dot on orbit ring
+function OrbitDot({ angle, radius }: { angle: number; radius: number; delay?: number }) {
   return (
-    <motion.div
-      className="absolute top-1/2 left-1/2 w-2 h-2 bg-brand-yellow rounded-full"
+    <div
+      className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-brand-yellow/75 rounded-full"
       style={{
-        x: Math.cos((angle * Math.PI) / 180) * radius - 4,
-        y: Math.sin((angle * Math.PI) / 180) * radius - 4,
+        transform: `translate(${Math.cos((angle * Math.PI) / 180) * radius - 3}px, ${
+          Math.sin((angle * Math.PI) / 180) * radius - 3
+        }px)`,
       }}
-      animate={{
-        opacity: [0.3, 1, 0.3],
-        scale: [0.8, 1.4, 0.8],
-      }}
-      transition={{ duration: 2, repeat: Infinity, delay }}
     />
   );
 }
 
 export const HeroSection = () => {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-
   return (
     <section
-      ref={ref}
       className="relative min-h-screen flex items-center justify-center pt-36 md:pt-24 pb-16 px-6 md:px-16 bg-brand-black overflow-hidden bg-pixel-grid"
     >
       {/* Radial ambient glow */}
@@ -92,10 +78,7 @@ export const HeroSection = () => {
         }}
       />
 
-      <motion.div
-        style={{ y, opacity }}
-        className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[58%_42%] gap-12 items-center z-10"
-      >
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[58%_42%] gap-12 items-center z-10">
         {/* LEFT COLUMN */}
         <motion.div
           variants={containerVariants}
@@ -108,11 +91,7 @@ export const HeroSection = () => {
             variants={itemVariants}
             className="hidden md:flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/20 px-4 py-2 mb-6 text-brand-yellow text-[9px] font-press-start uppercase tracking-widest"
           >
-            <motion.span
-              animate={{ opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-brand-yellow rounded-full"
-            />
+            <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
             Now with Deep Codebase Intelligence
             <ArrowRight className="w-3 h-3" />
           </motion.div>
@@ -129,7 +108,7 @@ export const HeroSection = () => {
                 className="absolute -bottom-1 left-0 h-[3px] bg-brand-yellow"
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                transition={{ delay: 0.25, duration: 0.35, ease: EASE_OUT }}
               />
             </span>
           </motion.h1>
@@ -183,41 +162,35 @@ export const HeroSection = () => {
 
         {/* RIGHT COLUMN */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.3 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.1, ease: EASE_OUT }}
           className="relative w-full h-full min-h-[420px] flex items-center justify-center"
         >
           {/* Glowing yellow blur */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-brand-yellow opacity-10 blur-3xl rounded-full pointer-events-none" />
 
-          {/* Rotating orbit rings */}
-          {[500, 380, 260].map((size, i) => (
-            <motion.div
+          {/* Clean concentric orbit rings */}
+          {[500, 380, 260].map((size) => (
+            <div
               key={size}
-              className="absolute top-1/2 left-1/2 rounded-full border border-brand-yellow/15"
+              className="absolute top-1/2 left-1/2 rounded-full border border-brand-yellow/15 pointer-events-none"
               style={{ width: size, height: size, marginLeft: -size / 2, marginTop: -size / 2 }}
-              animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-              transition={{ duration: 15 + i * 8, repeat: Infinity, ease: "linear" }}
             />
           ))}
 
           {/* Orbit dots */}
           <div className="absolute top-1/2 left-1/2">
-            <OrbitDot angle={30} radius={190} delay={0} />
-            <OrbitDot angle={150} radius={190} delay={0.5} />
-            <OrbitDot angle={270} radius={190} delay={1} />
-            <OrbitDot angle={80} radius={130} delay={0.3} />
-            <OrbitDot angle={220} radius={130} delay={0.8} />
+            <OrbitDot angle={30} radius={190} />
+            <OrbitDot angle={150} radius={190} />
+            <OrbitDot angle={270} radius={190} />
+            <OrbitDot angle={80} radius={130} />
+            <OrbitDot angle={220} radius={130} />
           </div>
 
           {/* Rabbit illustration */}
           <div className="relative z-10 w-full max-w-md aspect-square flex items-center justify-center">
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="relative w-full h-full"
-            >
+            <div className="relative w-full h-full">
               <Image
                 src="/hero1.png"
                 alt="GitRabbit AI"
@@ -226,18 +199,14 @@ export const HeroSection = () => {
                 className="object-contain"
                 priority
               />
-            </motion.div>
+            </div>
           </div>
 
           {/* Floating badge: AI Review Agent */}
-          <FloatingBadge className="-bottom-6 -right-4 lg:-right-10" delay={0.8}>
+          <FloatingBadge className="-bottom-6 -right-4 lg:-right-10" delay={0.18}>
             <div className="bg-[#0C0C0C] border border-gray-800 rounded-xl p-4 shadow-2xl min-w-[190px]">
               <div className="flex items-center gap-2 mb-2">
-                <motion.div
-                  animate={{ opacity: [1, 0.3, 1] }}
-                  transition={{ duration: 1.2, repeat: Infinity }}
-                  className="w-1.5 h-1.5 bg-brand-yellow"
-                />
+                <div className="w-1.5 h-1.5 bg-brand-yellow rounded-full" />
                 <span className="text-[9px] font-mono text-brand-yellow tracking-widest uppercase">AI Review Agent</span>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">Always learning.<br />Always improving.</p>
@@ -245,7 +214,7 @@ export const HeroSection = () => {
           </FloatingBadge>
 
           {/* Floating badge: Code Analysis */}
-          <FloatingBadge className="-top-4 -left-4 lg:-left-8" delay={1.1}>
+          <FloatingBadge className="-top-4 -left-4 lg:-left-8" delay={0.22}>
             <div className="bg-[#0C0C0C] border border-gray-800 rounded-xl p-3 shadow-2xl">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-brand-yellow/20 rounded flex items-center justify-center">
@@ -260,7 +229,7 @@ export const HeroSection = () => {
           </FloatingBadge>
 
           {/* Floating badge: Security */}
-          <FloatingBadge className="top-1/2 -right-2 lg:-right-6" delay={1.3}>
+          <FloatingBadge className="top-1/2 -right-2 lg:-right-6" delay={0.26}>
             <div className="bg-[#0C0C0C] border border-emerald-900/60 rounded-xl p-3 shadow-2xl">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 bg-emerald-500/20 rounded flex items-center justify-center">
@@ -274,21 +243,17 @@ export const HeroSection = () => {
             </div>
           </FloatingBadge>
         </motion.div>
-      </motion.div>
+      </div>
 
       {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5 }}
+        transition={{ delay: 0.35, duration: 0.3 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
         <span className="text-gray-600 text-[9px] font-mono uppercase tracking-widest">Scroll to explore</span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-px h-8 bg-gradient-to-b from-brand-yellow/50 to-transparent"
-        />
+        <div className="w-px h-8 bg-gradient-to-b from-brand-yellow/40 to-transparent" />
       </motion.div>
     </section>
   );

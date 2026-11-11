@@ -5,16 +5,18 @@ import Image from "next/image";
 import { NAV_LINKS } from "@/lib/constants";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, ArrowRight, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { V2AnnouncementModal } from "./v2-announcement-modal";
-import { V1GuestAccessModal } from "./v1-guest-access-modal";
 import { YouTubeProgressBar } from "./YouTubeProgressBar";
 
+const MOBILE_ANNOUNCEMENTS = [
+  "Version 2 is under construction",
+  "Version 2 is coming 1 January 2027",
+];
+
 export const Navbar = () => {
-  const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
-  const [isV1ModalOpen, setIsV1ModalOpen] = useState(false);
+  const [announcementIndex, setAnnouncementIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -38,24 +40,11 @@ export const Navbar = () => {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
-    if (pathname === "/") {
-      const hasSeenModal = sessionStorage.getItem("hasSeenV2Modal");
-      if (!hasSeenModal) {
-        const timer = setTimeout(() => {
-          setIsV2ModalOpen(true);
-          sessionStorage.setItem("hasSeenV2Modal", "true");
-        }, 2000);
-        return () => clearTimeout(timer);
-      }
-    }
-  }, [pathname]);
-
-  const handleCloseV2 = () => {
-    setIsV2ModalOpen(false);
-    setTimeout(() => {
-      setIsV1ModalOpen(true);
-    }, 350);
-  };
+    const interval = setInterval(() => {
+      setAnnouncementIndex((prev) => (prev + 1) % MOBILE_ANNOUNCEMENTS.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -63,16 +52,36 @@ export const Navbar = () => {
       <header className="fixed top-0 left-0 right-0 z-50 select-none">
         {/* Top Announcement Bar - Fixed Single Row on All Devices */}
         <div className="bg-brand-yellow text-brand-black py-1.5 md:py-2 px-3 md:px-4 border-b border-brand-black/10">
-          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 md:gap-4 text-center">
-            <span className="text-[8px] sm:text-[9px] md:text-[10px] font-press-start tracking-tight uppercase truncate">
-              🐇 GitRabbit v2 is under construction
-            </span>
-            <button
-              onClick={() => setIsV2ModalOpen(true)}
-              className="bg-brand-black text-brand-yellow px-2 md:px-3 py-1 text-[7px] md:text-[9px] font-press-start uppercase hover:brightness-125 transition-all shadow-[1px_1px_0px_#FFFFFF] cursor-pointer whitespace-nowrap shrink-0"
-            >
-              Learn More
-            </button>
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-2.5 md:gap-4 text-center">
+            {/* Desktop / Tablet: Show both status and launch announcement together */}
+            <div className="hidden sm:flex items-center justify-center gap-3">
+              <span className="inline-flex items-center gap-2 text-[11px] font-mono font-bold tracking-wide uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-black" />
+                Version 2 is under construction
+              </span>
+              <span className="text-brand-black/35 font-mono text-xs">|</span>
+              <span className="inline-flex items-center gap-1.5 bg-brand-black text-brand-yellow px-2.5 py-0.5 rounded-sm text-[10px] font-mono font-bold uppercase tracking-wider shadow-[1px_1px_0px_#FFFFFF]">
+                <Calendar className="w-3 h-3 shrink-0" />
+                Version 2 is coming 1 January 2027
+              </span>
+            </div>
+
+            {/* Mobile: Smartly alternate between the two announcements in one slim row */}
+            <div className="sm:hidden h-5 flex items-center justify-center overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={announcementIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wide whitespace-nowrap"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-black shrink-0" />
+                  {MOBILE_ANNOUNCEMENTS[announcementIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
 
@@ -153,7 +162,7 @@ export const Navbar = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                 className="lg:hidden border-t border-brand-gray/80 bg-[#0A0B10]/98 backdrop-blur-xl px-5 py-6 overflow-hidden shadow-2xl"
               >
                 <div className="flex flex-col space-y-4">
@@ -200,9 +209,6 @@ export const Navbar = () => {
           </AnimatePresence>
         </nav>
       </header>
-
-      <V2AnnouncementModal isOpen={isV2ModalOpen} onClose={handleCloseV2} />
-      <V1GuestAccessModal isOpen={isV1ModalOpen} onClose={() => setIsV1ModalOpen(false)} />
     </>
   );
 };

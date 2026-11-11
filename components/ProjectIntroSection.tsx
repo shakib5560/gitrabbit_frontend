@@ -7,13 +7,13 @@ const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 },
+    transition: { staggerChildren: 0.05 },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
 };
 
 export const ProjectIntroSection = () => {
@@ -65,8 +65,6 @@ export const ProjectIntroSection = () => {
         {/* Video Container */}
         <motion.div
           variants={itemVariants}
-          whileHover={{ scale: 1.01 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
           className="relative w-full aspect-video rounded-2xl md:rounded-3xl overflow-hidden bg-[#0C0C0C] border border-gray-800 shadow-2xl group"
         >
           {/* Animated border glow on hover */}

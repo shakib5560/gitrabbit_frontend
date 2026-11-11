@@ -79,6 +79,7 @@ export const InteractiveWorkflow = () => {
               {activeTab.id === tab.id && (
                 <motion.div
                   layoutId="active-tab-line"
+                  transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                   className="absolute -left-8 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-brand-yellow rounded-r-full"
                 />
               )}
@@ -89,8 +90,9 @@ export const InteractiveWorkflow = () => {
               </h3>
               {activeTab.id === tab.id && (
                 <motion.p
-                  initial={{ opacity: 0, y: 5 }}
+                  initial={{ opacity: 0, y: 3 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.16 }}
                   className="text-xs text-gray-400 leading-relaxed max-w-xs"
                 >
                   {tab.description}
@@ -122,10 +124,10 @@ export const InteractiveWorkflow = () => {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab.id}
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 w-full max-w-2xl"
             >
               {/* Code Window */}

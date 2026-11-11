@@ -125,18 +125,14 @@ export function BackendRequiredModal({ isOpen, onClose }: BackendRequiredModalPr
               aria-modal="true"
               aria-labelledby="modal-title"
               tabIndex={-1}
-              initial={{ scale: 0.92, opacity: 0, y: 24 }}
+              initial={{ scale: 0.98, opacity: 0, y: 4 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.92, opacity: 0, y: 24 }}
-              transition={{ type: "spring", damping: 28, stiffness: 320 }}
+              exit={{ scale: 0.98, opacity: 0, y: 4 }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
               className="w-full max-w-xl pointer-events-auto bg-[#0D0D0D] border border-white/[0.07] rounded-2xl shadow-[0_40px_80px_rgba(0,0,0,0.6)] overflow-hidden outline-none flex flex-col relative"
             >
               {/* Top accent bar */}
-              <motion.div
-                className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent"
-                animate={{ backgroundPosition: ["200% 0", "-200% 0"] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-              />
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400/70 to-transparent" />
 
               {/* Close Button */}
               <button

@@ -103,8 +103,9 @@ export default function BlogPage() {
           {/* Header Hero Section */}
           <div className="flex flex-col lg:flex-row items-center gap-12 mb-20">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.24 }}
               className="lg:flex-1 text-center lg:text-left"
             >
               <div className="inline-flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/30 text-brand-yellow px-3 py-1 text-[8px] font-press-start uppercase mb-6">
@@ -125,9 +126,9 @@ export default function BlogPage() {
 
             {/* Featured Post Card */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.15 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.24, delay: 0.05 }}
               className="lg:flex-1 w-full"
             >
               <Link
@@ -240,10 +241,10 @@ export default function BlogPage() {
               {filteredPosts.map((post, index) => (
                 <motion.article
                   key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * index }}
-                  className="flex flex-col bg-[#0D0F17] border border-brand-gray rounded-2xl overflow-hidden group hover:border-brand-yellow transition-all duration-300 hover:shadow-[0_8px_30px_rgba(245,197,24,0.08)]"
+                  transition={{ duration: 0.22, delay: 0.025 * index }}
+                  className="flex flex-col bg-[#0D0F17] border border-brand-gray rounded-2xl overflow-hidden group hover:border-brand-yellow transition-colors duration-200 hover:shadow-[0_8px_24px_rgba(245,197,24,0.06)]"
                 >
                   <div className="relative aspect-video overflow-hidden bg-[#151924]">
                     <Image

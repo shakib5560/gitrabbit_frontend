@@ -93,48 +93,29 @@ function NewsletterForm() {
           /* ── Success State ── */
           <motion.div
             key="success"
-            initial={{ opacity: 0, scale: 0.92, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: -8 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="flex flex-col gap-3"
           >
             <div className="flex items-start gap-3 bg-emerald-500/10 border border-emerald-500/25 rounded-sm p-4">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.15, type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-              </motion.div>
+              <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
               <div>
-                <motion.p
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-emerald-400 text-sm font-semibold"
-                >
+                <p className="text-emerald-400 text-sm font-semibold">
                   Thanks for subscribing!
-                </motion.p>
-                <motion.p
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.28 }}
-                  className="text-emerald-400/70 text-xs font-mono mt-0.5"
-                >
+                </p>
+                <p className="text-emerald-400/70 text-xs font-mono mt-0.5">
                   You&apos;re now on our list. We&apos;ll be in touch.
-                </motion.p>
+                </p>
               </div>
             </div>
-            <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
+            <button
               onClick={handleReset}
               className="text-[10px] font-mono text-brand-muted hover:text-brand-yellow transition-colors underline underline-offset-2 self-start"
             >
               Subscribe with a different email
-            </motion.button>
+            </button>
           </motion.div>
         ) : (
           /* ── Input State (idle / error / loading) ── */
@@ -143,16 +124,10 @@ function NewsletterForm() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.16 }}
             className="flex flex-col gap-2"
           >
-            <motion.div
-              animate={
-                state === "error"
-                  ? { x: [0, -6, 6, -4, 4, 0] }
-                  : { x: 0 }
-              }
-              transition={{ duration: 0.4 }}
+            <div
               className={`flex items-center border bg-brand-dark p-1 transition-colors ${
                 state === "error"
                   ? "border-red-500/60"
@@ -185,7 +160,7 @@ function NewsletterForm() {
                   "Subscribe"
                 )}
               </button>
-            </motion.div>
+            </div>
 
             {/* Error message */}
             <AnimatePresence>
@@ -237,46 +212,20 @@ export const Footer = () => {
           {/* Logo Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block group" aria-label="GitRabbit Home">
-              <motion.div
-                whileHover={{ y: -6, scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: "spring", stiffness: 350, damping: 18 }}
-                className="relative inline-flex flex-col items-center cursor-pointer"
-              >
-                {/* Floating Pixel Rabbit */}
-                <motion.div
-                  animate={{
-                    y: [0, -6, 0],
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 3.2,
-                    ease: "easeInOut",
-                  }}
-                  className="relative"
-                >
+              <div className="relative inline-flex flex-col items-center cursor-pointer transition-transform duration-200 group-hover:-translate-y-0.5">
+                {/* Pixel Rabbit */}
+                <div className="relative">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/footerlogo.png"
                     alt="gitrabbit"
-                    className="h-24 w-auto object-contain transition-all duration-300 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_8px_24px_rgba(245,197,24,0.45)]"
+                    className="h-24 w-auto object-contain transition-all duration-200 drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)] group-hover:drop-shadow-[0_8px_20px_rgba(245,197,24,0.35)]"
                   />
-                </motion.div>
+                </div>
 
-                {/* Ambient Soft Ground Shadow */}
-                <motion.div
-                  animate={{
-                    scaleX: [1, 0.8, 1],
-                    opacity: [0.45, 0.2, 0.45],
-                  }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 3.2,
-                    ease: "easeInOut",
-                  }}
-                  className="w-16 h-1.5 bg-black/60 rounded-full blur-[2px] mt-1"
-                />
-              </motion.div>
+                {/* Soft Ground Shadow */}
+                <div className="w-16 h-1.5 bg-black/60 rounded-full blur-[2px] mt-1 opacity-40" />
+              </div>
             </Link>
           </div>
 

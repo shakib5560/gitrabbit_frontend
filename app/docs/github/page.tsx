@@ -19,7 +19,16 @@ export default function GitHubNodePage() {
         { icon: CheckCircle, title: "PR Status Checks", desc: "Integrate GitRabbit status checks directly with branch protection rules to block unsafe merges." },
       ]}
       steps={[
-        { step: "Step 01", title: "Install from Marketplace", desc: "Navigate to the GitRabbit GitHub Marketplace page and click 'Install'.", code: "open https://github.com/apps/gitrabbit" },
+        {
+          step: "Step 01",
+          title: "Install from Marketplace",
+          desc: "Navigate to the GitRabbit GitHub Marketplace page and click 'Install'.",
+          maskedCode: {
+            message: "Logging to get your unique link",
+            prefix: "open",
+            loginHref: "/login",
+          },
+        },
         { step: "Step 02", title: "Choose Repository Scope", desc: "Select 'All repositories' or choose specific repositories you want to audit." },
         { step: "Step 03", title: "Grant Permissions", desc: "Approve requested read/write access to Pull Requests, Checks, and Contents." },
       ]}

@@ -6,12 +6,12 @@ import { Terminal, Key, ShieldCheck, Activity } from "lucide-react";
 export default function ApiReferencePage() {
   return (
     <DocPage
-      breadcrumb="Integrations / API_Reference"
+      breadcrumb="Platforms & API / REST & GraphQL API"
       badge="DEVELOPER REFERENCE"
       badgeColor="#10B981"
-      title="NEURAL API REFERENCE"
-      subtitle="Interact with GitRabbit programmatically using our REST and GraphQL APIs."
-      description={`GitRabbit provides a comprehensive API surface to query review histories, update custom rules, check codebase health metrics, and trigger audits programmatically. All requests require a Bearer token in the Authorization header.`}
+      title="REST & GraphQL API Reference"
+      subtitle="Query review histories, codebase health metrics, and trigger audits programmatically."
+      description={`GitRabbit exposes versioned REST and GraphQL endpoints for querying pull request review histories, updating organization rules, reading repository health scores, and triggering automated spec audits from external CI workflows. All API requests authenticate with a Bearer token in the \`Authorization\` header.`}
       features={[
         { icon: Key, title: "API Authentication", desc: "Access the API securely using personal developer tokens or organization tokens." },
         { icon: ShieldCheck, title: "Rate Limiting & Safety", desc: "Generous rate limits of 10,000 requests/hour per organization with secure CORS rules." },

@@ -3,44 +3,29 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
-import { Mail, Lock, User, CheckCircle2, Zap, Shield, GitBranch, ArrowRight, Sparkles } from "lucide-react";
-import { V2AnnouncementModal } from "@/components/v2-announcement-modal";
-import { V1GuestAccessModal } from "@/components/v1-guest-access-modal";
-import { useState, useEffect } from "react";
+import { Mail, Lock, User, Clock, Zap, Shield, GitBranch, ArrowRight, Sparkles } from "lucide-react";
+import { useState } from "react";
 
-/* ─── Static particle coordinates (pure, deterministic) ─── */
-const PARTICLES = Array.from({ length: 30 }, (_, i) => ({
+/* ─── Static ambient background dots (calm, zero infinite motion) ─── */
+const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
   id: i,
   x: ((i * 37 + 13) % 96) + 2,
   y: ((i * 53 + 29) % 96) + 2,
-  size: ((i * 19) % 3) + 1.5,
-  duration: ((i * 23) % 15) + 12,
-  delay: (i * 0.4) % 5,
+  size: ((i * 19) % 2) + 1.5,
 }));
 
-/* ─── Floating particle component ─── */
 function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {PARTICLES.map((p) => (
-        <motion.div
+        <div
           key={p.id}
-          className="absolute rounded-full bg-brand-yellow"
+          className="absolute rounded-full bg-brand-yellow opacity-15"
           style={{
             width: p.size,
             height: p.size,
             left: `${p.x}%`,
             top: `${p.y}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0, 0.4, 0],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: "easeInOut",
           }}
         />
       ))}
@@ -58,37 +43,8 @@ const TERMINAL_LINES = [
   "✓ Review complete in 2.3s",
 ];
 
-/* ─── Terminal typing effect ─── */
+/* ─── Clean static terminal preview ─── */
 function TerminalTyping() {
-  const [currentLine, setCurrentLine] = useState(0);
-  const [currentChar, setCurrentChar] = useState(0);
-  const [displayLines, setDisplayLines] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (currentLine >= TERMINAL_LINES.length) {
-      const timeout = setTimeout(() => {
-        setCurrentLine(0);
-        setCurrentChar(0);
-        setDisplayLines([]);
-      }, 3000);
-      return () => clearTimeout(timeout);
-    }
-
-    if (currentChar < TERMINAL_LINES[currentLine].length) {
-      const timeout = setTimeout(() => {
-        setCurrentChar((c) => c + 1);
-      }, 45);
-      return () => clearTimeout(timeout);
-    } else {
-      const timeout = setTimeout(() => {
-        setDisplayLines((prev) => [...prev, TERMINAL_LINES[currentLine]]);
-        setCurrentLine((l) => l + 1);
-        setCurrentChar(0);
-      }, 400);
-      return () => clearTimeout(timeout);
-    }
-  }, [currentLine, currentChar]);
-
   return (
     <div className="bg-[#080810] border border-gray-800/50 rounded-xl p-5 font-mono text-xs overflow-hidden">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-800/50">
@@ -98,7 +54,7 @@ function TerminalTyping() {
         <span className="text-gray-600 text-[10px] ml-2 font-mono">gitrabbit-cli</span>
       </div>
       <div className="space-y-1.5">
-        {displayLines.map((line, i) => (
+        {TERMINAL_LINES.map((line, i) => (
           <div
             key={i}
             className={`${
@@ -112,12 +68,6 @@ function TerminalTyping() {
             {line}
           </div>
         ))}
-        {currentLine < TERMINAL_LINES.length && (
-          <div className="text-gray-300">
-            {TERMINAL_LINES[currentLine].substring(0, currentChar)}
-            <span className="animate-pulse text-brand-yellow">▋</span>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -129,27 +79,16 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [focusedField, setFocusedField] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [isV2ModalOpen, setIsV2ModalOpen] = useState(false);
-  const [isV1ModalOpen, setIsV1ModalOpen] = useState(false);
-
-  const handleCloseV2 = () => {
-    setIsV2ModalOpen(false);
-    setTimeout(() => {
-      setIsV1ModalOpen(true);
-    }, 350);
-  };
+  const [signupNotice, setSignupNotice] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsV2ModalOpen(true);
-    return;
     setIsSubmitting(true);
+    setSignupNotice(false);
     setTimeout(() => {
       setIsSubmitting(false);
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }, 1500);
+      setSignupNotice(true);
+    }, 500);
   };
 
   const features = [
@@ -174,20 +113,15 @@ export default function SignupPage() {
         <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
           {/* LEFT COLUMN: Marketing */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28 }}
             className="hidden lg:flex flex-col"
           >
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/20 rounded-full px-4 py-1.5 mb-8 w-fit"
-            >
+            <div className="inline-flex items-center gap-2 bg-brand-yellow/10 border border-brand-yellow/20 rounded-full px-4 py-1.5 mb-8 w-fit">
               <Sparkles className="w-3.5 h-3.5 text-brand-yellow" />
               <span className="text-brand-yellow text-[10px] font-press-start uppercase">Free Forever for Open Source</span>
-            </motion.div>
+            </div>
 
             <h1 className="text-brand-white font-press-start text-2xl leading-relaxed mb-8">
               Start reviewing code{" "}
@@ -196,13 +130,10 @@ export default function SignupPage() {
 
             {/* Feature cards */}
             <div className="space-y-4 mb-10">
-              {features.map((feat, i) => (
-                <motion.div
+              {features.map((feat) => (
+                <div
                   key={feat.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-[#0C0C14]/80 border border-gray-800/50 hover:border-brand-yellow/20 transition-all group"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-[#0C0C14]/80 border border-gray-800/50 hover:border-brand-yellow/20 transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-brand-yellow/10 flex items-center justify-center shrink-0 border border-brand-yellow/20 group-hover:bg-brand-yellow/20 transition-colors">
                     <feat.icon className="w-5 h-5 text-brand-yellow" />
@@ -211,25 +142,19 @@ export default function SignupPage() {
                     <h3 className="text-brand-white font-bold text-sm">{feat.label}</h3>
                     <p className="text-gray-500 text-xs font-mono">{feat.desc}</p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
             {/* Terminal preview */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <TerminalTyping />
-            </motion.div>
+            <TerminalTyping />
           </motion.div>
 
           {/* RIGHT COLUMN: Sign Up Form */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.28, delay: 0.04 }}
             className="w-full max-w-md mx-auto"
           >
             <div className="relative">
@@ -243,12 +168,7 @@ export default function SignupPage() {
                 </div>
 
                 <div className="mb-8 relative">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "3rem" }}
-                    transition={{ delay: 0.3, duration: 0.4 }}
-                    className="h-1 bg-brand-yellow rounded-full mb-6"
-                  />
+                  <div className="w-12 h-1 bg-brand-yellow rounded-full mb-6" />
                   <h2 className="text-brand-white font-pixelify text-2xl font-bold uppercase tracking-widest">
                     Create Account
                   </h2>
@@ -259,18 +179,16 @@ export default function SignupPage() {
 
                 {/* GitHub button */}
                 <div className="space-y-3 mb-8">
-                  <motion.button
+                  <button
                     type="button"
-                    whileHover={{ scale: 1.01, y: -1 }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => setIsV2ModalOpen(true)}
-                    className="w-full flex items-center justify-center gap-3 py-3.5 bg-brand-white text-black rounded-xl hover:bg-gray-100 transition-all text-xs font-bold font-press-start uppercase shadow-[3px_3px_0px_rgba(245,197,24,0.5)] hover:shadow-[4px_4px_0px_rgba(245,197,24,0.6)] cursor-pointer"
+                    onClick={() => setSignupNotice(true)}
+                    className="w-full flex items-center justify-center gap-3 py-3.5 bg-brand-white text-black rounded-xl hover:bg-gray-100 transition-colors text-xs font-bold font-press-start uppercase shadow-[3px_3px_0px_rgba(245,197,24,0.5)] cursor-pointer"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12C2 16.418 4.865 20.166 8.839 21.5C9.339 21.591 9.524 21.282 9.524 21.018C9.524 20.781 9.515 20.155 9.51 19.34C6.73 19.943 6.143 18.003 6.143 18.003C5.688 16.848 5.033 16.541 5.033 16.541C4.127 15.922 5.102 15.934 5.102 15.934C6.104 16.004 6.63 16.96 6.63 16.96C7.52 18.484 8.966 18.044 9.544 17.788C9.635 17.135 9.897 16.695 10.187 16.444C7.967 16.191 5.635 15.333 5.635 11.478C5.635 10.378 6.028 9.477 6.671 8.766C6.567 8.513 6.222 7.487 6.77 6.098C6.77 6.098 7.615 5.827 9.51 7.108C10.313 6.884 11.168 6.772 12.015 6.768C12.861 6.772 13.716 6.884 14.52 7.108C16.414 5.827 17.258 6.098 17.258 6.098C17.807 7.487 17.462 8.513 17.359 8.766C18.003 9.477 18.394 10.378 18.394 11.478C18.394 15.344 16.059 16.188 13.834 16.435C14.197 16.748 14.521 17.368 14.521 18.334C14.521 19.721 14.509 20.841 14.509 21.018C14.509 21.284 14.693 21.603 15.203 21.5C19.172 20.161 22.034 16.418 22.034 12C22.034 6.477 17.523 2 12 2Z" fill="currentColor" />
                     </svg>
                     Continue with GitHub
-                  </motion.button>
+                  </button>
                 </div>
 
                 {/* Divider */}
@@ -360,40 +278,41 @@ export default function SignupPage() {
                   </div>
 
                   <div className="pt-4">
-                    <motion.button
+                    <button
                       type="submit"
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
                       disabled={isSubmitting}
-                      className="w-full bg-brand-yellow text-brand-black font-press-start text-[10px] uppercase py-4 shadow-[4px_4px_0px_#FFFFFF] hover:shadow-[5px_5px_0px_#FFFFFF] hover:brightness-110 active:shadow-none transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
+                      className="w-full bg-brand-yellow text-brand-black font-press-start text-[10px] uppercase py-4 shadow-[4px_4px_0px_#FFFFFF] hover:brightness-110 active:translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 cursor-pointer"
                     >
                       {isSubmitting ? (
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                          className="w-4 h-4 border-2 border-brand-black/30 border-t-brand-black rounded-full"
-                        />
+                        <div className="w-4 h-4 border-2 border-brand-black/30 border-t-brand-black rounded-full animate-spin" />
                       ) : (
                         <>
                           Start Free Trial
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}
-                    </motion.button>
+                    </button>
                   </div>
                 </form>
 
-                {/* Success toast */}
+                {/* Construction / Registration Paused Notice */}
                 <AnimatePresence>
-                  {showSuccess && (
+                  {signupNotice && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10 }}
+                      initial={{ opacity: 0, y: 6 }}
                       animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="mt-4 p-3 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-2"
+                      exit={{ opacity: 0, y: -6 }}
+                      className="mt-4 p-3.5 bg-brand-yellow/10 border border-brand-yellow/25 rounded-xl flex items-start gap-2.5"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400 text-xs font-mono">Account created! Check your email.</span>
+                      <Clock className="w-4 h-4 text-brand-yellow shrink-0 mt-0.5" />
+                      <div className="text-xs font-mono leading-relaxed">
+                        <p className="text-brand-yellow font-semibold">
+                          New account creation is temporarily paused.
+                        </p>
+                        <p className="text-gray-400 mt-0.5">
+                          GitRabbit is under construction — Version 2.0 is coming 1 January 2027.
+                        </p>
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -414,15 +333,6 @@ export default function SignupPage() {
           </motion.div>
         </div>
       </div>
-
-      <V2AnnouncementModal
-        isOpen={isV2ModalOpen}
-        onClose={handleCloseV2}
-      />
-      <V1GuestAccessModal
-        isOpen={isV1ModalOpen}
-        onClose={() => setIsV1ModalOpen(false)}
-      />
     </main>
   );
 }

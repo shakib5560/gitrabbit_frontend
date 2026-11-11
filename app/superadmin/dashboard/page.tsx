@@ -365,7 +365,7 @@ export default function UserDashboard() {
       >
         {showSuccessMessage ? (
           <div className="flex flex-col items-center justify-center py-8 text-center select-none">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-4 animate-bounce">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-4">
               <Check size={24} />
             </div>
             <h4 className="text-base font-bold text-text-primary font-sans">Repository Added!</h4>

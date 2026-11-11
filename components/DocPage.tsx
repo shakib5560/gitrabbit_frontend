@@ -1,23 +1,34 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, LucideIcon } from "lucide-react";
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20, filter: "blur(6px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-};
+import {
+  ArrowRight,
+  ArrowLeft,
+  LucideIcon,
+  Copy,
+  Check,
+  ChevronRight,
+  Lightbulb,
+  AlertTriangle,
+  Info,
+  ThumbsUp,
+  ThumbsDown,
+  List,
+  Link2,
+  Lock,
+} from "lucide-react";
 
 export interface DocStep {
   step: string;
   title: string;
   desc: string;
   code?: string;
+  maskedCode?: {
+    message: string;
+    prefix?: string;
+    loginHref?: string;
+  };
 }
 
 export interface DocFeature {
@@ -44,6 +55,57 @@ export interface DocPageProps {
   children?: React.ReactNode;
 }
 
+function renderInlineCode(text: string) {
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, idx) => {
+    if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
+      return (
+        <code
+          key={idx}
+          className="px-1.5 py-0.5 mx-0.5 rounded bg-white/[0.06] border border-gray-800 font-mono text-[13px] text-brand-yellow"
+        >
+          {part.slice(1, -1)}
+        </code>
+      );
+    }
+    return <React.Fragment key={idx}>{part}</React.Fragment>;
+  });
+}
+
+function CopyButton({ text, label = "Copy" }: { text: string; label?: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      // Clipboard API unavailable
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono text-gray-400 hover:text-white bg-white/[0.04] hover:bg-white/[0.08] border border-gray-800 transition-colors cursor-pointer"
+    >
+      {copied ? (
+        <>
+          <Check className="w-3 h-3 text-emerald-400" />
+          <span className="text-emerald-400">Copied</span>
+        </>
+      ) : (
+        <>
+          <Copy className="w-3 h-3" />
+          <span>{label}</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export function DocPage({
   breadcrumb,
   badge,
@@ -61,183 +123,447 @@ export function DocPage({
   prevPage,
   children,
 }: DocPageProps) {
+  const [activeSection, setActiveSection] = useState("overview");
+  const [feedback, setFeedback] = useState<"yes" | "no" | null>(null);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const breadcrumbParts = useMemo(
+    () =>
+      breadcrumb
+        .split("/")
+        .map((p) => p.replace(/_/g, " ").trim())
+        .filter(Boolean),
+    [breadcrumb]
+  );
+
+  const tocSections = useMemo(() => {
+    const items: { id: string; label: string }[] = [{ id: "overview", label: "Overview" }];
+    if (features && features.length > 0) {
+      items.push({ id: "capabilities", label: "Key Capabilities" });
+    }
+    if (steps && steps.length > 0) {
+      items.push({ id: "setup", label: "Setup & Workflow" });
+    }
+    if (codeExample) {
+      items.push({ id: "configuration", label: "Configuration" });
+    }
+    if (proTips && proTips.length > 0) {
+      items.push({ id: "best-practices", label: "Best Practices" });
+    }
+    return items;
+  }, [features, steps, codeExample, proTips]);
+
+  useEffect(() => {
+    const ids = tocSections.map((s) => s.id);
+    const elements = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    if (elements.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries.find((e) => e.isIntersecting);
+        if (visibleEntry) {
+          setActiveSection(visibleEntry.target.id);
+        }
+      },
+      { rootMargin: "-140px 0px -60% 0px", threshold: 0.1 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [tocSections]);
+
+  const handleCopyPageLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 1800);
+    } catch {
+      // Clipboard unavailable
+    }
+  };
+
   return (
-    <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-16">
-      {/* BREADCRUMB */}
-      <motion.div variants={itemVariants}>
-        <nav className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.4em] text-brand-yellow/40 mb-8">
-          <Link href="/docs" className="hover:text-brand-yellow/70 transition-colors">DOCS</Link>
-          <span className="w-1 h-1 bg-brand-yellow/20 rounded-full" />
-          <span className="text-brand-yellow/60">{breadcrumb}</span>
-        </nav>
+    <div className="flex items-start gap-8">
+      {/* CENTER ARTICLE COLUMN */}
+      <article className="flex-1 min-w-0 max-w-3xl space-y-12">
+        {/* Header & Breadcrumb */}
+        <header id="overview" className="scroll-mt-44 border-b border-gray-800/80 pb-8">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-gray-500">
+              <Link href="/docs" className="hover:text-brand-yellow transition-colors">
+                Docs
+              </Link>
+              {breadcrumbParts.map((part, idx) => (
+                <React.Fragment key={idx}>
+                  <ChevronRight className="w-3.5 h-3.5 text-gray-700" />
+                  <span
+                    className={
+                      idx === breadcrumbParts.length - 1
+                        ? "text-gray-200 font-medium"
+                        : "text-gray-500"
+                    }
+                  >
+                    {part}
+                  </span>
+                </React.Fragment>
+              ))}
+            </nav>
 
-        {badge && (
-          <span
-            className="inline-block text-[9px] font-bold uppercase tracking-[0.3em] px-3 py-1 rounded-sm mb-6 font-mono"
-            style={{ color: badgeColor, border: `1px solid ${badgeColor}30`, background: `${badgeColor}10` }}
-          >
-            {badge}
-          </span>
-        )}
+            <button
+              type="button"
+              onClick={handleCopyPageLink}
+              className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-2.5 py-1 rounded-md border border-gray-800/80 hover:border-gray-700 bg-[#0C0E13] transition-colors cursor-pointer"
+            >
+              {linkCopied ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  <span className="text-emerald-400">Link copied</span>
+                </>
+              ) : (
+                <>
+                  <Link2 className="w-3 h-3" />
+                  <span>Copy link</span>
+                </>
+              )}
+            </button>
+          </div>
 
-        <div className="relative mb-2">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: "60%" }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="absolute -top-4 left-0 h-px opacity-30"
-            style={{ background: `linear-gradient(to right, ${accentColor}, transparent)` }}
-          />
-          <h1 className="text-brand-white font-press-start text-2xl md:text-3xl lg:text-4xl leading-[1.3] tracking-tight">
+          {badge && (
+            <span
+              className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-md mb-4"
+              style={{
+                color: badgeColor,
+                border: `1px solid ${badgeColor}35`,
+                background: `${badgeColor}12`,
+              }}
+            >
+              {badge}
+            </span>
+          )}
+
+          <h1 className="text-2xl sm:text-3xl md:text-[34px] font-bold text-white tracking-tight leading-tight">
             {title}
           </h1>
-        </div>
-        <p className="text-gray-500 text-base font-mono mt-4" style={{ borderLeft: `2px solid ${accentColor}30`, paddingLeft: "1.5rem" }}>
-          {subtitle}
-        </p>
-      </motion.div>
+          <p className="text-base sm:text-lg text-gray-400 mt-3 leading-relaxed">
+            {subtitle}
+          </p>
+        </header>
 
-      {/* DESCRIPTION */}
-      <motion.section variants={itemVariants} className="prose prose-invert max-w-none">
-        <div className="text-gray-400 font-mono text-sm leading-relaxed space-y-4">
+        {/* Overview Description */}
+        <section className="space-y-4 text-[15.5px] leading-[1.75] text-gray-200/90">
           {description.split("\n\n").map((para, i) => (
-            <p key={i}>{para}</p>
+            <p key={i}>{renderInlineCode(para)}</p>
           ))}
-        </div>
-      </motion.section>
+        </section>
 
-      {/* CALLOUT */}
-      {callout && (
-        <motion.div
-          variants={itemVariants}
-          className={`p-6 rounded-sm border font-mono text-sm ${
-            callout.type === "warning"
-              ? "border-orange-500/30 bg-orange-500/5 text-orange-300"
-              : callout.type === "tip"
-              ? "border-green-500/30 bg-green-500/5 text-green-300"
-              : "border-blue-500/30 bg-blue-500/5 text-blue-300"
-          }`}
-        >
-          <span className="text-[9px] font-bold uppercase tracking-widest block mb-2 opacity-60">
-            {callout.type === "warning" ? "⚠ WARNING" : callout.type === "tip" ? "✦ PRO TIP" : "ℹ INFO"}
-          </span>
-          <span className="font-bold block mb-1">{callout.title}</span>
-          <span className="opacity-80 text-xs">{callout.body}</span>
-        </motion.div>
-      )}
-
-      {/* FEATURES GRID */}
-      {features && features.length > 0 && (
-        <motion.section variants={itemVariants} className="space-y-6">
-          <h2 className="font-press-start text-[9px] uppercase tracking-[0.4em]" style={{ color: accentColor }}>
-            Key_Capabilities
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {features.map((feat, i) => (
-              <div key={i} className="p-5 border border-gray-900 bg-[#050505] hover:border-gray-700 transition-colors group rounded-sm">
-                <feat.icon className="w-5 h-5 mb-3 transition-colors" style={{ color: `${accentColor}60` }} />
-                <h4 className="text-brand-white text-[11px] font-bold uppercase mb-2 tracking-widest">{feat.title}</h4>
-                <p className="text-gray-600 text-[11px] font-mono leading-relaxed">{feat.desc}</p>
-              </div>
-            ))}
+        {/* Callout */}
+        {callout && (
+          <div
+            className={`p-4 sm:p-5 rounded-xl border flex items-start gap-3.5 ${
+              callout.type === "warning"
+                ? "border-amber-500/30 bg-amber-500/[0.06] text-amber-200"
+                : callout.type === "tip"
+                ? "border-emerald-500/30 bg-emerald-500/[0.06] text-emerald-200"
+                : "border-blue-500/30 bg-blue-500/[0.06] text-blue-200"
+            }`}
+          >
+            <div className="mt-0.5 shrink-0">
+              {callout.type === "warning" ? (
+                <AlertTriangle className="w-4 h-4 text-amber-400" />
+              ) : callout.type === "tip" ? (
+                <Lightbulb className="w-4 h-4 text-emerald-400" />
+              ) : (
+                <Info className="w-4 h-4 text-blue-400" />
+              )}
+            </div>
+            <div className="text-sm leading-relaxed">
+              <p className="font-semibold text-white mb-1">{callout.title}</p>
+              <p className="text-gray-300 text-[13.5px]">{renderInlineCode(callout.body)}</p>
+            </div>
           </div>
-        </motion.section>
-      )}
+        )}
 
-      {/* STEPS */}
-      {steps && steps.length > 0 && (
-        <motion.section variants={itemVariants} className="space-y-6">
-          <h2 className="font-press-start text-[9px] uppercase tracking-[0.4em]" style={{ color: accentColor }}>
-            Setup_Sequence
-          </h2>
-          <div className="space-y-4">
-            {steps.map((s, i) => (
-              <div key={i} className="relative pl-12 pb-8 border-l border-gray-900 last:border-transparent last:pb-0">
+        {/* Key Capabilities */}
+        {features && features.length > 0 && (
+          <section id="capabilities" className="scroll-mt-44 space-y-5">
+            <h2 className="text-xl font-semibold text-white tracking-tight">
+              Key Capabilities
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {features.map((feat, i) => (
                 <div
-                  className="absolute left-0 -translate-x-1/2 w-6 h-6 rounded-full border flex items-center justify-center text-[9px] font-bold font-mono"
-                  style={{ borderColor: `${accentColor}40`, color: accentColor, background: "#080808" }}
+                  key={i}
+                  className="p-5 rounded-xl border border-gray-800/80 bg-[#0B0C10] hover:border-gray-700 transition-colors"
                 >
-                  {i + 1}
+                  <div
+                    className="w-9 h-9 rounded-lg flex items-center justify-center mb-3.5"
+                    style={{
+                      backgroundColor: `${accentColor}15`,
+                      border: `1px solid ${accentColor}30`,
+                    }}
+                  >
+                    <feat.icon className="w-4 h-4" style={{ color: accentColor }} />
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-1.5">{feat.title}</h3>
+                  <p className="text-[13px] text-gray-400 leading-relaxed">
+                    {renderInlineCode(feat.desc)}
+                  </p>
                 </div>
-                <div className="ml-4">
-                  <span className="text-[9px] font-bold uppercase tracking-widest mb-1 block" style={{ color: accentColor }}>{s.step}</span>
-                  <h4 className="text-brand-white text-sm font-bold mb-2">{s.title}</h4>
-                  <p className="text-gray-500 font-mono text-xs leading-relaxed mb-3">{s.desc}</p>
-                  {s.code && (
-                    <div className="bg-[#050505] border border-gray-900 rounded-sm p-4 font-mono text-xs text-green-400 overflow-x-auto">
-                      <span className="text-brand-yellow/40 mr-2">$</span>{s.code}
-                    </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Setup & Workflow Steps */}
+        {steps && steps.length > 0 && (
+          <section id="setup" className="scroll-mt-44 space-y-5">
+            <h2 className="text-xl font-semibold text-white tracking-tight">
+              Setup &amp; Workflow
+            </h2>
+            <div className="space-y-0">
+              {steps.map((s, i) => (
+                <div
+                  key={i}
+                  className="relative pl-10 pb-8 border-l border-gray-800 last:border-transparent last:pb-0"
+                >
+                  <div
+                    className="absolute left-0 -translate-x-1/2 w-6 h-6 rounded-full border flex items-center justify-center text-[11px] font-mono font-semibold bg-[#08090D]"
+                    style={{ borderColor: `${accentColor}50`, color: accentColor }}
+                  >
+                    {i + 1}
+                  </div>
+                  <div className="space-y-2">
+                    <span
+                      className="text-[11px] font-mono uppercase tracking-wider block"
+                      style={{ color: accentColor }}
+                    >
+                      {s.step}
+                    </span>
+                    <h3 className="text-base font-semibold text-white">{s.title}</h3>
+                    <p className="text-sm text-gray-400 leading-relaxed">
+                      {renderInlineCode(s.desc)}
+                    </p>
+                    {s.maskedCode ? (
+                      <div className="mt-3 space-y-2">
+                        <div className="flex items-center gap-2 text-xs text-gray-300 font-sans">
+                          <Lock className="w-3.5 h-3.5 text-brand-yellow shrink-0" />
+                          <Link
+                            href={s.maskedCode.loginHref ?? "/login"}
+                            className="hover:text-brand-yellow transition-colors"
+                          >
+                            {s.maskedCode.message}
+                          </Link>
+                        </div>
+                        <div className="flex items-center justify-between gap-3 bg-[#090B0F] border border-gray-800/90 rounded-lg px-4 py-3 font-mono text-xs overflow-hidden">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <span className="text-gray-600 select-none">$</span>
+                            {s.maskedCode.prefix && (
+                              <span className="text-emerald-400 shrink-0">{s.maskedCode.prefix}</span>
+                            )}
+                            <span
+                              aria-hidden="true"
+                              className="relative inline-block px-3 py-0.5 rounded select-none pointer-events-none bg-white/15 shadow-[0_0_18px_4px_rgba(255,255,255,0.14)] backdrop-blur-md"
+                            >
+                              <span className="blur-[6px] text-white/65">
+                                https://••••••••••••••••••••••••••
+                              </span>
+                            </span>
+                          </div>
+                          <Link
+                            href={s.maskedCode.loginHref ?? "/login"}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono text-gray-400 hover:text-brand-yellow bg-white/[0.03] border border-gray-800 transition-colors shrink-0"
+                          >
+                            <Lock className="w-3 h-3" />
+                            <span>Hidden</span>
+                          </Link>
+                        </div>
+                      </div>
+                    ) : (
+                      s.code && (
+                        <div className="mt-3 flex items-center justify-between gap-3 bg-[#090B0F] border border-gray-800/90 rounded-lg px-4 py-2.5 font-mono text-xs text-emerald-400 overflow-x-auto">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="text-gray-600 select-none">$</span>
+                            <span className="truncate">{s.code}</span>
+                          </div>
+                          <CopyButton text={s.code} />
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Configuration / Code Example */}
+        {codeExample && (
+          <section id="configuration" className="scroll-mt-44 space-y-4">
+            <h2 className="text-xl font-semibold text-white tracking-tight">
+              Configuration &amp; Reference
+            </h2>
+            <div className="rounded-xl overflow-hidden border border-gray-800/90 bg-[#090B0F]">
+              <div className="flex items-center justify-between px-4 py-2.5 bg-[#0F1117] border-b border-gray-800/90">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-xs font-mono text-gray-300 truncate">
+                    {codeExample.label}
+                  </span>
+                  {codeExample.lang && (
+                    <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-white/[0.05] text-gray-400 border border-gray-800">
+                      {codeExample.lang}
+                    </span>
                   )}
                 </div>
+                <CopyButton text={codeExample.code} />
               </div>
-            ))}
-          </div>
-        </motion.section>
-      )}
-
-      {/* CODE EXAMPLE */}
-      {codeExample && (
-        <motion.section variants={itemVariants} className="space-y-4">
-          <h2 className="font-press-start text-[9px] uppercase tracking-[0.4em]" style={{ color: accentColor }}>
-            Code_Example
-          </h2>
-          <div className="rounded-sm overflow-hidden border border-gray-900">
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#0D0D0D] border-b border-gray-900">
-              <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest">{codeExample.label}</span>
-              <div className="flex gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
-                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
-                <span className="w-2.5 h-2.5 rounded-full bg-green-500/40" />
-              </div>
+              <pre className="p-5 text-[13px] font-mono text-gray-200 overflow-x-auto leading-6">
+                <code>{codeExample.code}</code>
+              </pre>
             </div>
-            <pre className="bg-[#050505] p-6 text-xs font-mono text-gray-300 overflow-x-auto leading-relaxed whitespace-pre-wrap">
-              {codeExample.code}
-            </pre>
-          </div>
-        </motion.section>
-      )}
+          </section>
+        )}
 
-      {/* EXTRA CHILDREN */}
-      {children}
+        {/* Extra Custom Children */}
+        {children}
 
-      {/* PRO TIPS */}
-      {proTips && proTips.length > 0 && (
-        <motion.section variants={itemVariants} className="space-y-4">
-          <h2 className="font-press-start text-[9px] uppercase tracking-[0.4em] text-green-400">Pro_Tips</h2>
-          <ul className="space-y-3">
-            {proTips.map((tip, i) => (
-              <li key={i} className="flex items-start gap-3 font-mono text-xs text-gray-400">
-                <span className="text-green-400 mt-0.5 shrink-0">✦</span>
-                <span>{tip}</span>
-              </li>
-            ))}
-          </ul>
-        </motion.section>
-      )}
+        {/* Best Practices / Pro Tips */}
+        {proTips && proTips.length > 0 && (
+          <section id="best-practices" className="scroll-mt-44 space-y-4">
+            <h2 className="text-xl font-semibold text-white tracking-tight">
+              Best Practices
+            </h2>
+            <div className="p-5 rounded-xl border border-gray-800/80 bg-[#0B0C10]">
+              <ul className="space-y-3">
+                {proTips.map((tip, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow mt-2 shrink-0" />
+                    <span>{renderInlineCode(tip)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
 
-      {/* PREV / NEXT */}
-      {(prevPage || nextPage) && (
-        <motion.section variants={itemVariants} className="pt-12 border-t border-gray-900 flex items-center justify-between gap-4">
-          {prevPage ? (
-            <Link
-              href={prevPage.href}
-              className="flex items-center gap-2 text-gray-500 hover:text-brand-white text-[10px] font-mono uppercase tracking-widest group transition-colors"
-            >
-              <ArrowLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-              {prevPage.label}
-            </Link>
-          ) : <div />}
-          {nextPage && (
-            <Link
-              href={nextPage.href}
-              className="flex items-center gap-2 text-brand-yellow text-[10px] font-mono uppercase tracking-widest group hover:text-brand-white transition-colors"
-            >
-              {nextPage.label}
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-            </Link>
+        {/* Feedback Micro-Widget */}
+        <div className="pt-6 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-4">
+          <span className="text-xs text-gray-500">Was this page helpful?</span>
+          {feedback ? (
+            <span className="text-xs text-emerald-400 font-medium">
+              Thanks for your feedback.
+            </span>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setFeedback("yes")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-800 hover:border-gray-700 bg-[#0B0C10] text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <ThumbsUp className="w-3.5 h-3.5" />
+                Yes
+              </button>
+              <button
+                type="button"
+                onClick={() => setFeedback("no")}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-800 hover:border-gray-700 bg-[#0B0C10] text-xs text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <ThumbsDown className="w-3.5 h-3.5" />
+                No
+              </button>
+            </div>
           )}
-        </motion.section>
-      )}
-    </motion.div>
+        </div>
+
+        {/* Layered Prev / Next Navigation Cards */}
+        {(prevPage || nextPage) && (
+          <nav
+            aria-label="Pagination"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"
+          >
+            {prevPage ? (
+              <Link
+                href={prevPage.href}
+                className="group p-4 rounded-xl border border-gray-800/80 hover:border-brand-yellow/40 bg-[#0B0C10] transition-colors flex flex-col gap-1"
+              >
+                <span className="text-[11px] font-mono text-gray-500 flex items-center gap-1">
+                  <ArrowLeft className="w-3 h-3 group-hover:-translate-x-0.5 transition-transform" />
+                  Previous
+                </span>
+                <span className="text-sm font-medium text-white group-hover:text-brand-yellow transition-colors">
+                  {prevPage.label}
+                </span>
+              </Link>
+            ) : (
+              <div />
+            )}
+
+            {nextPage && (
+              <Link
+                href={nextPage.href}
+                className="group p-4 rounded-xl border border-gray-800/80 hover:border-brand-yellow/40 bg-[#0B0C10] transition-colors flex flex-col items-end gap-1 text-right"
+              >
+                <span className="text-[11px] font-mono text-gray-500 flex items-center gap-1">
+                  Next
+                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                </span>
+                <span className="text-sm font-medium text-white group-hover:text-brand-yellow transition-colors">
+                  {nextPage.label}
+                </span>
+              </Link>
+            )}
+          </nav>
+        )}
+      </article>
+
+      {/* LAYER 3: Right Sticky "On This Page" Outline */}
+      <aside className="hidden xl:block w-48 shrink-0 sticky top-[168px]">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-xs font-semibold text-gray-300">
+            <List className="w-3.5 h-3.5 text-gray-500" />
+            <span>On this page</span>
+          </div>
+          <ul className="space-y-1.5 border-l border-gray-800/80">
+            {tocSections.map((section) => {
+              const isCurrent = activeSection === section.id;
+              return (
+                <li key={section.id}>
+                  <a
+                    href={`#${section.id}`}
+                    className={`block pl-3 py-0.5 text-xs transition-colors -ml-px border-l ${
+                      isCurrent
+                        ? "border-brand-yellow text-brand-yellow font-medium"
+                        : "border-transparent text-gray-500 hover:text-gray-200"
+                    }`}
+                  >
+                    {section.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          <div className="pt-5 mt-5 border-t border-gray-800/80 space-y-2 text-xs">
+            <p className="text-[11px] font-mono uppercase tracking-wider text-gray-600">
+              Resources
+            </p>
+            <Link
+              href="/docs/config"
+              className="block text-gray-400 hover:text-white transition-colors"
+            >
+              YAML Schema Reference
+            </Link>
+            <Link
+              href="/contact"
+              className="block text-gray-400 hover:text-white transition-colors"
+            >
+              Contact Engineering
+            </Link>
+          </div>
+        </div>
+      </aside>
+    </div>
   );
 }

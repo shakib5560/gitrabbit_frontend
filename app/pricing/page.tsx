@@ -46,14 +46,14 @@ const pricingPlans = [
   },
   {
     name: "Standard",
-    price: "15",
-    coins: "50",
+    price: "10",
+    coins: "30",
     description: "Ideal for consistent individual developers.",
     icon: Zap,
     color: "from-blue-900 to-gray-900",
     accentColor: "#3B82F6",
     features: [
-      "50 Rabbit Coins",
+      "30 Rabbit Coins",
       "Advanced AI Insights",
       "Faster processing speed",
       "Priority email support",
@@ -119,23 +119,12 @@ const FAQData = [
   },
 ];
 
-// Floating particle component
-function FloatingParticle({ delay, duration, x, y }: { delay: number; duration: number; x: number; y: number }) {
+// Static subtle ambient particle (no infinite motion)
+function FloatingParticle({ x, y }: { delay?: number; duration?: number; x: number; y: number }) {
   return (
-    <motion.div
-      className="absolute w-1 h-1 bg-brand-yellow rounded-full opacity-20"
+    <div
+      className="absolute w-1 h-1 bg-brand-yellow rounded-full opacity-15"
       style={{ left: `${x}%`, top: `${y}%` }}
-      animate={{
-        y: [0, -30, 0],
-        opacity: [0.1, 0.5, 0.1],
-        scale: [1, 1.5, 1],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
     />
   );
 }
@@ -144,10 +133,10 @@ function FAQItem({ q, a, index }: { q: string; a: string; index: number }) {
   const [open, setOpen] = useState(false);
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 6 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
+      transition={{ duration: 0.22, delay: index * 0.03 }}
       className="border border-gray-800 rounded-xl overflow-hidden"
     >
       <button
@@ -313,22 +302,20 @@ export default function PricingPage() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06, duration: 0.28 }}
               className="lg:flex-1 relative aspect-square max-w-sm w-full"
             >
-              {/* Animated rings */}
+              {/* Clean concentric rings */}
               {[1, 2, 3].map((ring) => (
-                <motion.div
+                <div
                   key={ring}
                   className="absolute inset-0 rounded-full border border-brand-yellow/10"
                   style={{
-                    scale: 0.7 + ring * 0.15,
+                    transform: `scale(${0.7 + ring * 0.15})`,
                     opacity: 0.5 / ring,
                   }}
-                  animate={{ rotate: ring % 2 === 0 ? 360 : -360 }}
-                  transition={{ duration: 8 + ring * 4, repeat: Infinity, ease: "linear" }}
                 />
               ))}
               <div className="absolute inset-0 bg-brand-yellow/10 blur-3xl rounded-full" />
@@ -337,7 +324,7 @@ export default function PricingPage() {
                 alt="Rabbit Coins"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-contain relative z-10 brightness-110 drop-shadow-[0_0_40px_rgba(245,197,24,0.5)] animate-float"
+                className="object-contain relative z-10 brightness-110 drop-shadow-[0_0_40px_rgba(245,197,24,0.45)]"
               />
             </motion.div>
           </div>
@@ -349,20 +336,20 @@ export default function PricingPage() {
               return (
                 <motion.div
                   key={plan.name}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * (index + 1), duration: 0.6 }}
+                  transition={{ delay: 0.03 * index, duration: 0.24 }}
                   onHoverStart={() => setHoveredPlan(plan.name)}
                   onHoverEnd={() => setHoveredPlan(null)}
                   className={`relative flex flex-col p-6 bg-[#080808] border ${
                     plan.popular ? "border-brand-yellow/60" : "border-gray-900"
-                  } rounded-sm group transition-all duration-500 cursor-pointer overflow-hidden`}
+                  } rounded-sm group transition-colors duration-200 cursor-pointer overflow-hidden`}
                   style={{
                     boxShadow:
                       hoveredPlan === plan.name
-                        ? `0 0 40px ${plan.accentColor}20, 0 0 80px ${plan.accentColor}10`
+                        ? `0 0 30px ${plan.accentColor}15`
                         : plan.popular
-                        ? `0 0 20px ${plan.accentColor}15`
+                        ? `0 0 16px ${plan.accentColor}12`
                         : "none",
                     borderColor:
                       hoveredPlan === plan.name
@@ -374,16 +361,12 @@ export default function PricingPage() {
                 >
                   {/* Background gradient */}
                   <div
-                    className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
+                    className={`absolute inset-0 bg-gradient-to-br ${plan.color} opacity-0 group-hover:opacity-25 transition-opacity duration-200`}
                   />
 
-                  {/* Shimmer line at top */}
+                  {/* Crisp top accent line */}
                   {plan.popular && (
-                    <motion.div
-                      className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-yellow to-transparent"
-                      animate={{ x: ["-100%", "100%"] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    />
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-brand-yellow/80 to-transparent" />
                   )}
 
                   {plan.popular && (
@@ -395,13 +378,12 @@ export default function PricingPage() {
 
                   <div className="relative z-10 mb-6">
                     {/* Icon */}
-                    <motion.div
+                    <div
                       className="w-10 h-10 rounded-sm flex items-center justify-center mb-4"
                       style={{ backgroundColor: plan.accentColor + "20", border: `1px solid ${plan.accentColor}30` }}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
                     >
                       <Icon className="w-5 h-5" style={{ color: plan.accentColor }} />
-                    </motion.div>
+                    </div>
 
                     <div className="font-press-start text-[8px] uppercase tracking-widest mb-2 opacity-60" style={{ color: plan.accentColor }}>
                       {plan.name}
@@ -483,7 +465,7 @@ export default function PricingPage() {
             className="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-900 border border-gray-900 rounded-xl overflow-hidden mb-24"
           >
             {[
-              { label: "50 COINS", price: "$15", per: "$0.30 / coin", highlight: false },
+              { label: "30 COINS", price: "$10", per: "$0.33 / coin", highlight: false },
               { label: "100 COINS", price: "$30", per: "$0.30 / coin — Best Value", highlight: true },
               { label: "Enterprise", price: "Custom", per: "Unlimited scale", highlight: false },
             ].map((item) => (
@@ -526,19 +508,16 @@ export default function PricingPage() {
 
           {/* Bottom CTA */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.24 }}
             className="text-center bg-[#0C0C0C] border border-brand-gray p-12 rounded-3xl relative overflow-hidden"
           >
-            {/* Animated corner decorations */}
+            {/* Corner accents */}
             <div className="absolute top-0 left-0 w-24 h-24 border-l-2 border-t-2 border-brand-yellow/30 rounded-tl-3xl" />
             <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-brand-yellow/30 rounded-br-3xl" />
-            <motion.div
-              className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-yellow to-transparent"
-              animate={{ x: ["-100%", "100%"] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            />
+            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-yellow/60 to-transparent" />
 
             <Sparkles className="w-8 h-8 text-brand-yellow mx-auto mb-6 opacity-60" />
             <h2 className="text-xl md:text-2xl font-press-start text-brand-white mb-6">
@@ -691,7 +670,7 @@ export default function PricingPage() {
 
         {checkoutStep === "success" && selectedPlan && (
           <div className="flex flex-col items-center justify-center py-8 text-center select-none font-sans">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-4 animate-bounce">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-500 mb-4">
               <Check size={24} />
             </div>
             <h4 className="text-base font-bold text-text-primary">

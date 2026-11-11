@@ -3,19 +3,19 @@
 import { DocPage } from "@/components/DocPage";
 import { FileText, Calendar, CheckSquare, Layers } from "lucide-react";
 
-export default function CodeRabbitPlanPage() {
+export default function GitRabbitPlanPage() {
   return (
     <DocPage
-      breadcrumb="Pre-Merge_Automation / CodeRabbit_Plan"
+      breadcrumb="Pre-Merge Automation / GitRabbit Plan"
       badge="UPSTREAM PLANNING"
       badgeColor="#F97316"
-      title="CODERABBIT PLAN"
-      subtitle="Generate structured, editable coding plans from issue tickets and text prompts."
-      description={`GitRabbit Plan (inspired by CodeRabbit Plan) acts as an upstream architect. Before a single line of code is written, it interprets issue descriptions from trackers (Jira, Linear, GitHub Issues) or simple text prompts and writes a structured technical design document. These plans can then be directly assigned to your developers or AI coding agents for execution.`}
+      title="GitRabbit Plan"
+      subtitle="Generate structured, editable coding blueprints from issue tickets and technical prompts."
+      description={`GitRabbit Plan acts as an upstream technical architect before implementation begins. It parses requirements from Jira, Linear, GitHub Issues, or natural-language prompts alongside your repository structure to produce a file-level implementation blueprint.\n\nArchitects and engineers can review, edit, and approve task checklists directly in the workspace, then hand them off to developers or AI coding agents—and verify the resulting pull request against the approved plan.`}
       features={[
-        { icon: Calendar, title: "Issue Tracker Integrations", desc: "Syncs directly with Jira and Linear. Reads project tickets to design solutions." },
-        { icon: CheckSquare, title: "Editable Tasks List", desc: "Allows technical architects to edit, split, and refine the generated checklists before handoff." },
-        { icon: Layers, title: "AI Agent Handoff", desc: "Export tasks directly into format specifications compatible with coding agents (like Devin or GitRabbit runners)." },
+        { icon: Calendar, title: "Issue Tracker Sync", desc: "Connects directly with Jira, Linear, and GitHub Issues to convert acceptance criteria into structured engineering tasks." },
+        { icon: CheckSquare, title: "Editable Task Blueprints", desc: "Review, split, reorder, and refine proposed file changes and verification checklists before handoff." },
+        { icon: Layers, title: "AI Agent & PR Handoff", desc: "Export approved specs to coding agents (Devin, Claude Code, Cursor) and link them to Spec Verification gates." },
       ]}
       steps={[
         { step: "Step 01", title: "Select an Issue", desc: "Link your Jira or Linear workspace to GitRabbit. Import a user story or ticket." },

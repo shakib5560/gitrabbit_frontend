@@ -149,7 +149,7 @@ h1, h2 {
 }
 
 .animate-glow-ring {
-  animation: glow-pulse-ring 2s ease-in-out infinite;
+  animation: none;
 }
 
 html {
@@ -233,16 +233,16 @@ body {
 }
 
 .animate-float {
-  animation: float 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: none;
 }
 
 @keyframes breathe {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.01); }
 }
 
 .animate-breathe {
-  animation: breathe 3s ease-in-out infinite;
+  animation: none;
 }
 
 @keyframes scanline {
@@ -251,17 +251,17 @@ body {
 }
 
 @keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(20px); }
+  from { opacity: 0; transform: translateX(8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-up {
-  animation: fade-up 0.5s ease forwards;
+  animation: fade-up 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes coin-spin {
@@ -270,7 +270,7 @@ body {
 }
 
 .animate-coin-spin {
-  animation: coin-spin 8s linear infinite;
+  animation: none;
 }
 
 /* ===== Dashboard Container: Force Clean Smart Typography ===== */
@@ -307,7 +307,16 @@ body {
 }
 
 .coin-glow {
-  animation: coin-pulse 2.5s ease-in-out infinite;
+  box-shadow: 0 0 8px 1px rgba(245, 197, 24, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* ─────────────────────────────────────────────

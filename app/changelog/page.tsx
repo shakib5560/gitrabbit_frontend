@@ -67,8 +67,9 @@ export default function ChangelogPage() {
           {/* Header */}
           <div className="flex flex-col lg:flex-row items-center gap-12 mb-24 border-b border-brand-gray pb-24">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.24 }}
               className="lg:flex-1 text-center lg:text-left"
             >
               <div className="inline-flex items-center gap-2 bg-brand-yellow/10 text-brand-yellow px-3 py-1 text-[8px] font-press-start uppercase mb-6 border border-brand-yellow/30">
@@ -83,9 +84,9 @@ export default function ChangelogPage() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.26, delay: 0.05 }}
               className="lg:flex-1 relative aspect-square max-w-sm w-full"
             >
               <Image
@@ -105,10 +106,10 @@ export default function ChangelogPage() {
             {changelogData.map((item, index) => (
               <motion.div
                 key={item.version}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 8 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ duration: 0.24, delay: index * 0.03 }}
                 className={`relative flex flex-col md:flex-row gap-8 md:gap-0 ${["Visual Diff Enhancements", "Bitbucket Integration Beta"].includes(item.title) ? "md:flex-row-reverse" : ""
                   }`}
               >
